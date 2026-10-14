@@ -84,27 +84,62 @@ graph TD
 
 ---
 
+## 🔄 Automated Seasonal Updates & Data Synchronization
+
+The platform is designed to update continuously throughout the active 2026/27 campaign without manual maintenance:
+
+### 1. Weekly Automated GitHub Actions Workflow
+The repository includes [`.github/workflows/season_update.yml`](.github/workflows/season_update.yml):
+- **Schedule**: Automatically runs every **Monday at 04:00 UTC** (immediately following weekend Premier League and La Liga fixtures).
+- **Manual Trigger**: Can be run on-demand anytime from the GitHub Actions tab via `workflow_dispatch` (e.g. following midweek matchdays).
+- **Execution Pipeline**:
+  1. Executes `node scripts/fetch_espn.mjs` to fetch live match results, rosters, and player metrics.
+  2. Runs `python pipeline/ml_engine.py` to recalibrate team attack/defense ratings and squad BYRX indices.
+  3. Verifies the Next.js production build (`npm run build`).
+  4. Automatically commits updated stats to `main` with `[skip ci]`.
+  5. Vercel detects the push and deploys the fresh live site in ~60 seconds with 0 manual steps!
+
+### 2. Manual On-Demand Local Refresh
+To refresh all data and retrain model weights locally at any time:
+```bash
+# 1. Fetch latest stats from ESPN
+node scripts/fetch_espn.mjs
+
+# 2. Re-calibrate and export ML model weights
+python pipeline/ml_engine.py
+```
+
+---
+
+## 🧠 Machine Learning Model Registry & Roadmap
+
+The prediction system is engineered with a modular model registry in [`pipeline/ml_engine.py`](pipeline/ml_engine.py) and [`web/src/lib/matchPredictor.ts`](web/src/lib/matchPredictor.ts):
+
+| Version | Model Architecture | Status | Key Features |
+| :--- | :--- | :---: | :--- |
+| **v1.2.0** | **Bivariate Dixon-Coles Poisson + BYRX Squad Index** | **ACTIVE** | Monte Carlo 10,000 trials, team $\alpha$ attack & $\beta$ defense ratings, $+0.28$ home advantage bias, low-scoring $\rho$ adjustment. |
+| **v2.0.0** | **Gradient Boosted Decision Trees (XGBoost / LightGBM)** | *UPCOMING* | Rolling 5-match expected goals ($xG$), key player absence penalties, head-to-head tactical match history, rest day fatigue decay. |
+| **v3.0.0** | **Deep Expected Threat (xT) Neural Network** | *PLANNED* | Positional spatial player embeddings, pitch control vectors, and game state transition matrices. |
+
+### Upgrading the ML Model Soon:
+When training your upcoming model in Scikit-Learn, XGBoost, or PyTorch:
+1. Inherit from `PredictorBase` in `pipeline/ml_engine.py`.
+2. Implement your `.train(data)` and `.predict_match(home, away)` logic.
+3. Run `python pipeline/ml_engine.py` to auto-export parameters to `web/src/data/mlModelWeights.json`.
+4. The web dashboard will automatically adopt the new model version and display it on the live AI Match Predictor tab.
+
+---
+
 ## 🚀 Deployment Guide
 
 ### Deploying to Vercel (Recommended — 1 Click)
 
-The project includes a root [`vercel.json`](vercel.json) configured for Next.js in the `web/` directory.
-
-#### Option A: Direct Git Import on Vercel Dashboard
-1. Go to [vercel.com/new](https://vercel.com/new) and select your GitHub repository.
+1. Go to **[vercel.com/new](https://vercel.com/new)** and import `byrx72/BYRX72_Football_INSIGHTS`.
 2. In **Project Settings**:
    - **Framework Preset**: Next.js
-   - **Root Directory**: `web` (click *Edit* and select the `web` folder)
-   - **Build Command**: `npm run build` (automatic)
-   - **Output Directory**: `.next` (automatic)
+   - **Root Directory**: Click *Edit* and select **`web`**
+   - **Build Command** & **Install Command**: Leave toggles **OFF** (use standard zero-config defaults)
 3. Click **Deploy**. Your site will be live on a `*.vercel.app` domain in ~60 seconds.
-
-#### Option B: Deploying via Vercel CLI
-```bash
-# From the project root
-npm i -g vercel
-vercel
-```
 
 ### Deploying to Netlify
 1. Connect your repository on [Netlify](https://app.netlify.com).
@@ -136,9 +171,10 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the live dashboard.
 
-### 2. Python Scoring Engine
+### 2. Python Scoring Engine & ML Pipeline
 ```bash
 python pipeline/algorithm.py
+python pipeline/ml_engine.py
 ```
 
 ---

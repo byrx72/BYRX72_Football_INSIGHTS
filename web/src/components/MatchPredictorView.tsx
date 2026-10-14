@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import { League, TEAMS, EspnTeam } from '@/data/espn';
-import { predictMatch, FEATURED_FIXTURES, MatchPredictionResult } from '@/lib/matchPredictor';
+import { predictMatch, FEATURED_FIXTURES, MatchPredictionResult, ACTIVE_MODEL } from '@/lib/matchPredictor';
 import { getPlayerPhoto } from '@/lib/playerPhotos';
-import { Sparkles, Brain, Swords, Shield, Target, TrendingUp, RefreshCw, ArrowUpRight, Zap, Trophy } from 'lucide-react';
+import { Sparkles, Brain, Swords, Shield, Target, TrendingUp, RefreshCw, ArrowUpRight, Zap, Trophy, Cpu, Layers, CheckCircle2, Calendar } from 'lucide-react';
 
 interface MatchPredictorViewProps {
   league: League;
@@ -19,6 +19,7 @@ export const MatchPredictorView: React.FC<MatchPredictorViewProps> = ({ league }
   const [homeId, setHomeId] = useState<string>(featured[0]?.home || leagueTeams[0]?.id || '382');
   const [awayId, setAwayId] = useState<string>(featured[0]?.away || leagueTeams[1]?.id || '359');
   const [simulating, setSimulating] = useState(false);
+  const [showModelSpecs, setShowModelSpecs] = useState(false);
 
   // Compute prediction
   const prediction: MatchPredictionResult | null = useMemo(() => {
@@ -47,10 +48,79 @@ export const MatchPredictorView: React.FC<MatchPredictorViewProps> = ({ league }
             Match<br /><em>Predictor.</em>
           </h1>
         </div>
-        <p className="text-slate-400 text-sm max-w-md font-mono leading-relaxed">
-          Bivariate Poisson statistical modeling powered by 2026/27 ESPN team attack/defense coefficients, squad BYRX ratings, and key player performance vectors.
-        </p>
+        <div className="flex flex-col gap-2 max-w-md">
+          <p className="text-slate-400 text-sm font-mono leading-relaxed">
+            Bivariate Poisson statistical modeling powered by 2026/27 ESPN team attack/defense coefficients, squad BYRX ratings, and key player performance vectors.
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowModelSpecs(!showModelSpecs)}
+              className="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 underline decoration-emerald-500/50 underline-offset-4"
+            >
+              <Cpu className="w-3.5 h-3.5" />
+              <span>Model Architecture: {ACTIVE_MODEL.version}</span>
+              <span className="text-[10px] bg-emerald-500/10 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                Auto-Updating
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Seasonal & Machine Learning Pipeline Specs Drawer */}
+      {showModelSpecs && (
+        <div className="bg-gradient-to-br from-black/80 via-slate-950/80 to-black/80 border border-emerald-500/30 rounded-2xl p-5 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-white font-bold text-sm flex items-center gap-2">
+                  {ACTIVE_MODEL.name}
+                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/40">
+                    Active v{ACTIVE_MODEL.version}
+                  </span>
+                </h4>
+                <p className="text-xs text-slate-400 font-mono">
+                  Weekly Automated Sync · GitHub Actions & ESPN Public API
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono text-slate-400 bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <Calendar className="w-3 h-3 text-cyan-400" />
+                Live Season 2026/27
+              </span>
+              <span className="text-[11px] font-mono text-amber-300 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <Layers className="w-3 h-3" />
+                Next: {ACTIVE_MODEL.nextVersion}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 text-xs font-mono">
+            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+              <span className="text-slate-400 block mb-1">Active Mathematical Engine:</span>
+              <p className="text-white leading-relaxed">
+                Bivariate Dixon-Coles Poisson process with 10,000 Monte Carlo trials, team attack (α), defense (β), and +0.28 home bias.
+              </p>
+            </div>
+            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+              <span className="text-slate-400 block mb-1">Season Update Cadence:</span>
+              <p className="text-white leading-relaxed">
+                Weekly scheduled cron every Monday at 04:00 UTC, automatically regenerating squad ratings after all matchday results.
+              </p>
+            </div>
+            <div className="bg-emerald-500/5 rounded-xl p-3 border border-emerald-500/20">
+              <span className="text-emerald-400 block mb-1">Upcoming ML Model Upgrade:</span>
+              <p className="text-slate-300 leading-relaxed">
+                Pluggable interface in <code className="text-emerald-300">pipeline/ml_engine.py</code> ready for XGBoost multi-feature gradient boosting & player spatial tracking.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Featured Match Quick Selectors */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2">

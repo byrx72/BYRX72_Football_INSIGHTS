@@ -1,4 +1,26 @@
 import { League, TEAMS, STANDINGS, squadOf, Scored, EspnTeam, Standing } from '@/data/espn';
+import rawWeights from '@/data/mlModelWeights.json';
+
+export interface ModelMetadata {
+  version: string;
+  name: string;
+  trainedAt: string;
+  nextVersion: string;
+  plannedFeatures: string[];
+}
+
+export const ACTIVE_MODEL: ModelMetadata = {
+  version: (rawWeights as any)?.metadata?.version ?? '1.2.0',
+  name: (rawWeights as any)?.metadata?.name ?? 'Dixon-Coles Bivariate Poisson + BYRX Squad Index',
+  trainedAt: (rawWeights as any)?.metadata?.trained_at ?? new Date().toISOString(),
+  nextVersion: (rawWeights as any)?.next_model_pipeline?.upcoming_version ?? '2.0.0-xgboost-ensemble',
+  plannedFeatures: (rawWeights as any)?.next_model_pipeline?.planned_features ?? [
+    'rolling_5_match_xG',
+    'player_absence_impact_penalty',
+    'tactical_matchup_differential',
+    'fatigue_days_between_fixtures',
+  ],
+};
 
 export interface MatchPredictionResult {
   homeTeam: EspnTeam;
@@ -26,6 +48,7 @@ export interface MatchPredictionResult {
     description: string;
   };
   simulationRuns: number;
+  modelVersion: string;
 }
 
 // Factorial helper for Poisson distribution
@@ -212,6 +235,7 @@ export function predictMatch(
       }A)`,
     },
     simulationRuns: runs,
+    modelVersion: ACTIVE_MODEL.version,
   };
 }
 
