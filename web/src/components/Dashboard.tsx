@@ -8,6 +8,10 @@ import '@/app/dashboard.css';
 import {
   League, Pos, Scored, GENERATED_AT, SEASON, ALL_PLAYERS, leaguePlayers, leagueStats, standingsFor, teamsFor, squadOf, teamOfTheWeek, SCORED, TEAMS,
 } from '@/data/espn';
+import { CinematicLeagueAtmosphere } from './CinematicLeagueAtmosphere';
+import { ActivityShowcase } from './ActivityShowcase';
+import { RichPlayerProfileModal } from './RichPlayerProfileModal';
+import { getPlayerPhoto } from '@/lib/playerPhotos';
 
 type View = 'overview' | 'leaderboard' | 'totw' | 'compare' | 'table' | 'clubs' | 'method';
 
@@ -25,15 +29,34 @@ const POS_COL: Record<Pos, string> = { GK: '#f5c46b', DEF: '#6bc4f5', MID: '#b48
 const initials = (n: string) => n.split(' ').map((x) => x[0]).slice(0, 2).join('');
 
 function Avatar({ p, cls }: { p: Scored; cls: string }) {
+  const photo = getPlayerPhoto(p);
+  const [imgSrc, setImgSrc] = useState(photo);
   const [bad, setBad] = useState(false);
+
+  // If player object changes, update photo
+  React.useEffect(() => {
+    setImgSrc(getPlayerPhoto(p));
+    setBad(false);
+  }, [p]);
+
   if (bad)
     return (
-      <div className={cls} style={{ display: 'grid', placeItems: 'center', fontWeight: 700, color: '#d6f77b', fontSize: 14 }}>
+      <div className={cls} style={{ display: 'grid', placeItems: 'center', fontWeight: 800, color: '#ffffff', background: 'linear-gradient(135deg, #1e293b, #0f172a)', fontSize: 13, border: '1px solid rgba(255,255,255,0.1)' }}>
         {initials(p.name)}
       </div>
     );
   // eslint-disable-next-line @next/next/no-img-element
-  return <img className={cls} src={p.headshot} alt={p.name} loading="lazy" onError={() => setBad(true)} />;
+  return (
+    <img
+      className={cls}
+      src={imgSrc}
+      alt={p.name}
+      loading="lazy"
+      onError={() => {
+        setBad(true);
+      }}
+    />
+  );
 }
 
 /* ───────────── Graphics ───────────── */
@@ -201,8 +224,21 @@ function Overview({ league, onOpen, go }: { league: League; onOpen: (p: Scored) 
   const creators = [...all].sort((a, b) => b.stats.assists - a.stats.assists).slice(0, 6);
   const posCount = (['GK', 'DEF', 'MID', 'FWD'] as Pos[]).map((k) => ({ label: k, value: all.filter((p) => p.pos === k).length, color: POS_COL[k] }));
   const teamGoals = std.map((s) => ({ label: s.team, value: s.gf, img: TEAMS.find((t) => t.id === s.teamId)?.crest })).sort((a, b) => b.value - a.value).slice(0, 8);
+  const availableStars = all.slice(0, 8);
+
   return (
     <>
+      {/* 4-Card UI Showcase from reference image */}
+      {top && (
+        <ActivityShowcase
+          league={league}
+          featuredPlayer={top}
+          onOpenPlayer={onOpen}
+          onExploreMore={() => go('leaderboard')}
+          availableStars={availableStars}
+        />
+      )}
+
       <div className="page-heading">
         <div>
           <div className="eyebrow">{LEAGUE_NAME[league]} / matchweek {String(ls.played).padStart(2, '0')}</div>
@@ -563,10 +599,24 @@ export default function Dashboard() {
   const onSearch = (q: string) => { setQuery(q); if (q && view !== 'leaderboard') setView('leaderboard'); };
 
   return (
-    <div className="app-shell">
-      <div className="noise" /><div className="ambient" />
+    <div className={`app-shell theme-${league.toLowerCase()}`}>
+      <CinematicLeagueAtmosphere league={league} />
       <aside className={`sidebar ${open ? 'open' : ''}`}>
-        <div className="brand"><div className="brand-mark">BI</div><div className="brand-copy"><strong>football insights</strong><span>influence, quantified</span></div></div>
+        <div className="brand">
+          <div
+            className="brand-mark font-display"
+            style={{
+              background: league === 'PL' ? 'linear-gradient(135deg, #e90052, #8b008b)' : 'linear-gradient(135deg, #ea0029, #ff5722)',
+              color: '#ffffff',
+            }}
+          >
+            {league === 'PL' ? 'PL' : 'LL'}
+          </div>
+          <div className="brand-copy">
+            <strong className="font-display">football insights</strong>
+            <span>influence, quantified</span>
+          </div>
+        </div>
         <div className="nav-label">Workspace</div>
         <nav className="nav-list">
           {NAV.map((n) => <button key={n.id} className={`nav-item ${view === n.id ? 'active' : ''}`} onClick={() => { setClub(null); go(n.id); }}>{n.icon}<span>{n.label}</span></button>)}
@@ -580,18 +630,27 @@ export default function Dashboard() {
       </aside>
       <div className="main">
         <div className="mobile-topbar">
-          <div className="brand" style={{ padding: 0 }}><div className="brand-mark">BI</div><div className="brand-copy"><strong>football insights</strong></div></div>
+          <div className="brand" style={{ padding: 0 }}><div className="brand-mark font-display">{league === 'PL' ? 'PL' : 'LL'}</div><div className="brand-copy"><strong className="font-display">football insights</strong></div></div>
           <button className="seg" style={{ padding: 8, color: '#e8efe6' }} onClick={() => setOpen(!open)} aria-label="Menu"><Menu size={18} /></button>
         </div>
         <header className="topbar">
-          <div className="breadcrumb">{SEASON} season <span style={{ color: '#4f5e51' }}> / </span> <b>{NAV.find((n) => n.id === view)?.label ?? 'Inspect the math'}</b></div>
+          <div className="breadcrumb font-mono text-xs">{SEASON} season <span style={{ color: '#4f5e51' }}> / </span> <b>{NAV.find((n) => n.id === view)?.label ?? 'Inspect the math'}</b></div>
           <div className="top-actions">
             <div style={{ position: 'relative' }}>
               <Search size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#68766b' }} />
-              <input className="top-input" placeholder="Search players or clubs" value={query} onChange={(e) => onSearch(e.target.value)} aria-label="Search players" />
+              <input className="top-input font-mono" placeholder="Search players or clubs" value={query} onChange={(e) => onSearch(e.target.value)} aria-label="Search players" />
             </div>
             <div className="seg">
-              {(['PL', 'LALIGA'] as League[]).map((l) => <button key={l} className={league === l ? 'on' : ''} onClick={() => { setLeague(l); setClub(null); }}>{LEAGUE_NAME[l]}</button>)}
+              {(['PL', 'LALIGA'] as League[]).map((l) => (
+                <button
+                  key={l}
+                  className={league === l ? 'on' : ''}
+                  style={league === l ? { backgroundColor: l === 'PL' ? '#e90052' : '#ea0029', color: '#ffffff' } : {}}
+                  onClick={() => { setLeague(l); setClub(null); }}
+                >
+                  {LEAGUE_NAME[l]}
+                </button>
+              ))}
             </div>
           </div>
         </header>
@@ -606,7 +665,7 @@ export default function Dashboard() {
           <footer className="footer"><span>BYRX72 / football insights</span><span>Data: ESPN · {SEASON} · synced {new Date(GENERATED_AT).toLocaleDateString()}</span></footer>
         </main>
       </div>
-      {player && <PlayerModal p={player} onClose={() => setPlayer(null)} />}
+      {player && <RichPlayerProfileModal player={player} onClose={() => setPlayer(null)} league={league} />}
     </div>
   );
 }
