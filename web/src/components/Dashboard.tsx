@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import {
-  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge,
+  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain,
 } from 'lucide-react';
 import '@/app/dashboard.css';
 import {
@@ -11,12 +11,14 @@ import {
 import { CinematicLeagueAtmosphere } from './CinematicLeagueAtmosphere';
 import { ActivityShowcase } from './ActivityShowcase';
 import { RichPlayerProfileModal } from './RichPlayerProfileModal';
+import { MatchPredictorView } from './MatchPredictorView';
 import { getPlayerPhoto } from '@/lib/playerPhotos';
 
-type View = 'overview' | 'leaderboard' | 'totw' | 'compare' | 'table' | 'clubs' | 'method';
+type View = 'overview' | 'predict' | 'leaderboard' | 'totw' | 'compare' | 'table' | 'clubs' | 'method';
 
 const NAV: { id: View; label: string; icon: React.ReactNode }[] = [
   { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={18} /> },
+  { id: 'predict', label: 'AI Match Predictor', icon: <Brain size={18} /> },
   { id: 'leaderboard', label: 'Leaderboard', icon: <BarChart3 size={18} /> },
   { id: 'totw', label: 'Team of the Week', icon: <Shield size={18} /> },
   { id: 'compare', label: 'Compare players', icon: <GitCompare size={18} /> },
@@ -656,6 +658,7 @@ export default function Dashboard() {
         </header>
         <main className="content">
           {view === 'overview' && <Overview league={league} onOpen={setPlayer} go={go} />}
+          {view === 'predict' && <MatchPredictorView league={league} />}
           {view === 'leaderboard' && <LeaderboardView league={league} onOpen={setPlayer} query={query} />}
           {view === 'totw' && <Totw league={league} onOpen={setPlayer} />}
           {view === 'compare' && <Compare league={league} />}
