@@ -68,149 +68,145 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
         
-        {/* VIEW 1: Luxury Dark Landing Page (Inspired by Shakuro Dribbble Reference) */}
-        {currentView === 'landing' ? (
+        {/* SECTION 1: Luxury Editorial Landing Page (Always Present) */}
+        <div id="landing-hero">
           <LuxuryLandingPage
             currentLeague={currentLeague}
             onLeagueChange={setCurrentLeague}
             onNavigateToApp={(tab) => {
-              setCurrentView('app');
               setActiveTab(tab);
+              const element = document.getElementById('analytics-suite');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+              }
             }}
             onOpenAlgorithm={() => setIsAlgorithmOpen(true)}
             players={PLAYERS}
             onSelectPlayer={setSelectedPlayer}
           />
-        ) : (
-          /* VIEW 2: Interactive Analytics App View */
-          <div className="space-y-8 animate-in fade-in duration-300">
-            
-            {/* App View Header Banner */}
-            <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-stone-950 via-slate-900 to-emerald-950/40 border border-slate-800 p-6 sm:p-8 shadow-2xl">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl">{leagueMeta.flag}</span>
-                    <span className="text-xs font-mono font-bold tracking-widest uppercase text-emerald-400">
-                      {leagueMeta.name} • Gameweek {leagueMeta.currentGameweek} Live
-                    </span>
-                  </div>
-                  <h1 className="text-2xl sm:text-4xl font-black text-white">
-                    European Football Intelligence Console
-                  </h1>
-                  <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
-                    Position-adjusted performance ratings normalized to per-90 metrics with dynamic opponent context multipliers.
-                  </p>
+        </div>
+
+        {/* SECTION 2: Live 2026/27 Interactive Analytics Console & Leaderboard Suite */}
+        <div id="analytics-suite" className="space-y-8 pt-8 border-t border-stone-800 scroll-mt-24">
+          
+          {/* App View Header Banner */}
+          <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-stone-950 via-slate-900 to-emerald-950/40 border border-slate-800 p-6 sm:p-8 shadow-2xl">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{leagueMeta.flag}</span>
+                  <span className="text-xs font-mono font-bold tracking-widest uppercase text-emerald-400">
+                    {leagueMeta.name} • Matchweek {leagueMeta.currentGameweek} Live (2026/27 Season)
+                  </span>
                 </div>
+                <h2 className="text-2xl sm:text-4xl font-black text-white font-serif">
+                  European Football Intelligence Suite
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 max-w-xl">
+                  Position-adjusted performance ratings normalized to per-90 metrics with dynamic opponent context multipliers.
+                </p>
+              </div>
 
-                {/* Quick Switcher back to Editorial Landing */}
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => setCurrentView('landing')}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 transition-all shrink-0"
+                  onClick={() => setIsAlgorithmOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-all shadow-lg"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Return to Editorial Landing</span>
+                  <Code2 className="w-4 h-4" />
+                  <span>Inspect Formula</span>
                 </button>
               </div>
-            </section>
+            </div>
+          </section>
 
-            {/* Sub-navigation Tabs */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-                <button
-                  onClick={() => setActiveTab('leaderboard')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                    activeTab === 'leaderboard'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
-                      : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <Trophy className="w-4 h-4" />
-                  <span>Leaderboards</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('totw')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                    activeTab === 'totw'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
-                      : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <Compass className="w-4 h-4" />
-                  <span>Tactical Pitch (4-3-3)</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('compare')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                    activeTab === 'compare'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
-                      : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <GitCompare className="w-4 h-4" />
-                  <span>Head-to-Head Radar</span>
-                </button>
-
-                <button
-                  onClick={() => setActiveTab('teams')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
-                    activeTab === 'teams'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
-                      : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <Shield className="w-4 h-4" />
-                  <span>All 20 Clubs</span>
-                </button>
-              </div>
+          {/* Sub-navigation Tabs */}
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+              <button
+                onClick={() => setActiveTab('leaderboard')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                  activeTab === 'leaderboard'
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                    : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <Trophy className="w-4 h-4" />
+                <span>2026/27 Leaderboard</span>
+              </button>
 
               <button
-                onClick={() => setIsAlgorithmOpen(true)}
-                className="hidden lg:flex items-center gap-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 underline underline-offset-4"
+                onClick={() => setActiveTab('totw')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                  activeTab === 'totw'
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                    : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
               >
-                <Code2 className="w-4 h-4" />
-                Inspect Formula Matrix
+                <Compass className="w-4 h-4" />
+                <span>Tactical Pitch (4-3-3)</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('compare')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                  activeTab === 'compare'
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                    : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <GitCompare className="w-4 h-4" />
+                <span>Head-to-Head Radar</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('teams')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 ${
+                  activeTab === 'teams'
+                    ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25'
+                    : 'bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <Shield className="w-4 h-4" />
+                <span>All 20 {currentLeague === 'PL' ? 'PL' : 'La Liga'} Clubs</span>
               </button>
             </div>
-
-            {/* Active Tab Screen */}
-            <section>
-              {activeTab === 'leaderboard' && (
-                <LeaderboardTable
-                  players={PLAYERS}
-                  league={currentLeague}
-                  onSelectPlayer={setSelectedPlayer}
-                  onOpenAlgorithm={() => setIsAlgorithmOpen(true)}
-                />
-              )}
-
-              {activeTab === 'totw' && (
-                <TeamOfTheWeek
-                  players={PLAYERS}
-                  league={currentLeague}
-                  onSelectPlayer={setSelectedPlayer}
-                />
-              )}
-
-              {activeTab === 'compare' && (
-                <RadarComparison
-                  players={PLAYERS}
-                  onSelectPlayer={setSelectedPlayer}
-                />
-              )}
-
-              {activeTab === 'teams' && (
-                <TeamsDirectory
-                  currentLeague={currentLeague}
-                  onLeagueChange={setCurrentLeague}
-                  onSelectTeamForLeaderboard={handleSelectTeamForLeaderboard}
-                />
-              )}
-            </section>
           </div>
-        )}
+
+          {/* Active Tab Screen */}
+          <section>
+            {activeTab === 'leaderboard' && (
+              <LeaderboardTable
+                players={PLAYERS}
+                league={currentLeague}
+                onSelectPlayer={setSelectedPlayer}
+                onOpenAlgorithm={() => setIsAlgorithmOpen(true)}
+              />
+            )}
+
+            {activeTab === 'totw' && (
+              <TeamOfTheWeek
+                players={PLAYERS}
+                league={currentLeague}
+                onSelectPlayer={setSelectedPlayer}
+              />
+            )}
+
+            {activeTab === 'compare' && (
+              <RadarComparison
+                players={PLAYERS}
+                onSelectPlayer={setSelectedPlayer}
+              />
+            )}
+
+            {activeTab === 'teams' && (
+              <TeamsDirectory
+                currentLeague={currentLeague}
+                onLeagueChange={setCurrentLeague}
+                onSelectTeamForLeaderboard={handleSelectTeamForLeaderboard}
+              />
+            )}
+          </section>
+        </div>
 
         {/* Recruiter & System Architecture Section (Shared Footer Block) */}
         <section className="p-8 rounded-3xl bg-slate-900/60 border border-slate-800 space-y-6">
@@ -276,7 +272,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="w-full border-t border-slate-800/80 bg-stone-950 py-8 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2025 BYRX72 Football Insights. Built for LinkedIn Portfolio & Algorithmic Showcase.</p>
+          <p>© 2026/27 BYRX72 Football Insights. Built for LinkedIn Portfolio &amp; Algorithmic Showcase.</p>
           <div className="flex items-center gap-4 text-slate-400">
             <button onClick={() => setIsAlgorithmOpen(true)} className="hover:text-emerald-400 transition-colors">
               Algorithm Specs

@@ -328,7 +328,7 @@ export const LuxuryLandingPage: React.FC<LuxuryLandingPageProps> = ({
             <div className="flex flex-wrap items-center gap-3">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-mono tracking-widest uppercase bg-[#141b16] border border-emerald-500/30 text-emerald-400 shadow-inner">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                EST. 2024 • THE EUROPEAN MONEYBALL BENCHMARK
+                2026/27 SEASON LIVE • THE EUROPEAN MONEYBALL BENCHMARK
               </div>
             </div>
 
