@@ -15,7 +15,7 @@ export const TeamOfTheWeek: React.FC<TeamOfTheWeekProps> = ({
   league,
   onSelectPlayer,
 }) => {
-  const [selectedGw, setSelectedGw] = useState<number>(6);
+  const [selectedGw, setSelectedGw] = useState<number>(8);
 
   // Filter players for this league and chosen Gameweek
   const totwData = useMemo(() => {
@@ -139,7 +139,7 @@ export const TeamOfTheWeek: React.FC<TeamOfTheWeekProps> = ({
         {/* Gameweek Selector */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-2xl border border-slate-800">
-            {[1, 2, 3, 4, 5, 6].map((gw) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((gw) => (
               <button
                 key={gw}
                 onClick={() => setSelectedGw(gw)}

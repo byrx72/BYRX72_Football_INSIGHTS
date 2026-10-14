@@ -96,9 +96,9 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 : 'bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-800'
             }`}
           >
-            Full Season 2024/25
+            Full Season 2026/27
           </button>
-          {[1, 2, 3, 4, 5, 6].map((gw) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((gw) => (
             <button
               key={gw}
               onClick={() => setSelectedGameweek(gw)}
@@ -364,7 +364,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>
               Showing {filteredPlayers.length} calibrated players for{' '}
-              {selectedGameweek === 'season' ? 'Full Season 2024/25' : `Gameweek ${selectedGameweek}`}
+              {selectedGameweek === 'season' ? 'Full Season 2026/27 (Live)' : `Gameweek ${selectedGameweek}`}
             </span>
           </div>
           <button

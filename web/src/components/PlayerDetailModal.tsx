@@ -12,7 +12,7 @@ interface PlayerDetailModalProps {
 }
 
 export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, onClose }) => {
-  const [selectedGw, setSelectedGw] = useState<number>(6);
+  const [selectedGw, setSelectedGw] = useState<number>(8);
 
   if (!player) return null;
 
@@ -104,7 +104,7 @@ export const PlayerDetailModal: React.FC<PlayerDetailModalProps> = ({ player, on
             <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800/80 flex flex-col justify-between">
               <div>
                 <span className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 block">
-                  Season 2024/25 Core Metrics
+                  Season 2026/27 Core Metrics
                 </span>
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
