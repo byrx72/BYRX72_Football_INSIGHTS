@@ -1,0 +1,70 @@
+name: Automated Season Data Sync & Model Pipeline
+
+on:
+  schedule:
+    # Runs every Monday at 04:00 UTC (after weekend PL and La Liga matchdays finish)
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+    # Allows manual trigger at any time from GitHub Actions UI
+
+permissions:
+  contents: write
+
+jobs:
+  sync-season:
+    name: Sync Live Season Stats & Re-run BYRX Engine
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: 'web/package-lock.json'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f pipeline/requirements.txt ]; then pip install -r pipeline/requirements.txt; fi
+
+      - name: Fetch Latest Season Data from ESPN
+        run: |
+          node scripts/fetch_espn.mjs
+
+      - name: Run Machine Learning & Scoring Pipeline
+        run: |
+          python pipeline/algorithm.py
+          if [ -f pipeline/ml_engine.py ]; then python pipeline/ml_engine.py; fi
+
+      - name: Verify Web Build
+        run: |
+          cd web
+          npm ci
+          npm run build
+
+      - name: Commit & Push Updated Season Data
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if data files changed
+          if git status --porcelain | grep -E "(web/src/data|database)"; then
+            echo "Changes detected in season data. Committing updates..."
+            git add web/src/data/ database/
+            git commit -m "data(season): automated weekly stats update for Premier League & La Liga [skip ci]"
+            git push origin main
+          else
+            echo "No changes in season data. Skipping commit."
+          fi

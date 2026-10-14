@@ -1,0 +1,397 @@
+{
+  "metadata": {
+    "version": "1.2.0",
+    "name": "Dixon-Coles Bivariate Poisson + BYRX Squad Index",
+    "trained_at": "2026-10-14T18:18:22.986521Z",
+    "status": "active",
+    "teams_fitted": 40,
+    "features": [
+      "goals_scored_p90",
+      "goals_conceded_p90",
+      "squad_byrx_power",
+      "home_advantage_bias",
+      "league_tempo_baseline"
+    ]
+  },
+  "hyperparameters": {
+    "home_advantage": 0.28,
+    "dixon_coles_rho": -0.06,
+    "monte_carlo_iterations": 10000,
+    "league_baselines": {
+      "PL": 1.48,
+      "LALIGA": 1.34
+    }
+  },
+  "team_ratings": {
+    "382": {
+      "team": "Manchester City",
+      "league": "PL",
+      "attack": 1.802,
+      "defense": 0.563,
+      "squad_byrx_index": 1.97,
+      "points_per_match": 3.0,
+      "goal_diff": 11
+    },
+    "359": {
+      "team": "Arsenal",
+      "league": "PL",
+      "attack": 1.126,
+      "defense": 0.563,
+      "squad_byrx_index": 1.41,
+      "points_per_match": 2.5,
+      "goal_diff": 5
+    },
+    "331": {
+      "team": "Brighton & Hove Albion",
+      "league": "PL",
+      "attack": 2.027,
+      "defense": 0.563,
+      "squad_byrx_index": 2.73,
+      "points_per_match": 2.17,
+      "goal_diff": 13
+    },
+    "337": {
+      "team": "Brentford",
+      "league": "PL",
+      "attack": 1.351,
+      "defense": 0.676,
+      "squad_byrx_index": 1.61,
+      "points_per_match": 1.67,
+      "goal_diff": 6
+    },
+    "368": {
+      "team": "Everton",
+      "league": "PL",
+      "attack": 0.901,
+      "defense": 0.563,
+      "squad_byrx_index": 1.16,
+      "points_per_match": 1.67,
+      "goal_diff": 3
+    },
+    "363": {
+      "team": "Chelsea",
+      "league": "PL",
+      "attack": 1.689,
+      "defense": 1.464,
+      "squad_byrx_index": 2.2,
+      "points_per_match": 1.67,
+      "goal_diff": 2
+    },
+    "357": {
+      "team": "Leeds United",
+      "league": "PL",
+      "attack": 0.901,
+      "defense": 0.563,
+      "squad_byrx_index": 1.09,
+      "points_per_match": 1.5,
+      "goal_diff": 3
+    },
+    "306": {
+      "team": "Hull City",
+      "league": "PL",
+      "attack": 0.901,
+      "defense": 0.676,
+      "squad_byrx_index": 1.31,
+      "points_per_match": 1.5,
+      "goal_diff": 2
+    },
+    "364": {
+      "team": "Liverpool",
+      "league": "PL",
+      "attack": 0.788,
+      "defense": 0.788,
+      "squad_byrx_index": 1.15,
+      "points_per_match": 1.5,
+      "goal_diff": 0
+    },
+    "373": {
+      "team": "Ipswich Town",
+      "league": "PL",
+      "attack": 1.014,
+      "defense": 1.351,
+      "squad_byrx_index": 1.32,
+      "points_per_match": 1.5,
+      "goal_diff": -3
+    },
+    "361": {
+      "team": "Newcastle United",
+      "league": "PL",
+      "attack": 1.126,
+      "defense": 1.464,
+      "squad_byrx_index": 1.58,
+      "points_per_match": 1.33,
+      "goal_diff": -3
+    },
+    "384": {
+      "team": "Crystal Palace",
+      "league": "PL",
+      "attack": 1.014,
+      "defense": 1.351,
+      "squad_byrx_index": 1.34,
+      "points_per_match": 1.17,
+      "goal_diff": -3
+    },
+    "360": {
+      "team": "Manchester United",
+      "league": "PL",
+      "attack": 1.014,
+      "defense": 1.014,
+      "squad_byrx_index": 1.19,
+      "points_per_match": 1.0,
+      "goal_diff": 0
+    },
+    "388": {
+      "team": "Coventry City",
+      "league": "PL",
+      "attack": 0.563,
+      "defense": 1.239,
+      "squad_byrx_index": 1.12,
+      "points_per_match": 1.0,
+      "goal_diff": -6
+    },
+    "393": {
+      "team": "Nottingham Forest",
+      "league": "PL",
+      "attack": 0.563,
+      "defense": 0.901,
+      "squad_byrx_index": 0.9,
+      "points_per_match": 0.83,
+      "goal_diff": -3
+    },
+    "362": {
+      "team": "Aston Villa",
+      "league": "PL",
+      "attack": 0.676,
+      "defense": 1.239,
+      "squad_byrx_index": 1.17,
+      "points_per_match": 0.83,
+      "goal_diff": -5
+    },
+    "366": {
+      "team": "Sunderland",
+      "league": "PL",
+      "attack": 0.676,
+      "defense": 1.351,
+      "squad_byrx_index": 1.08,
+      "points_per_match": 0.67,
+      "goal_diff": -6
+    },
+    "349": {
+      "team": "AFC Bournemouth",
+      "league": "PL",
+      "attack": 0.788,
+      "defense": 1.464,
+      "squad_byrx_index": 0.97,
+      "points_per_match": 0.5,
+      "goal_diff": -6
+    },
+    "367": {
+      "team": "Tottenham Hotspur",
+      "league": "PL",
+      "attack": 0.55,
+      "defense": 1.014,
+      "squad_byrx_index": 0.81,
+      "points_per_match": 0.5,
+      "goal_diff": -6
+    },
+    "370": {
+      "team": "Fulham",
+      "league": "PL",
+      "attack": 0.676,
+      "defense": 1.126,
+      "squad_byrx_index": 0.86,
+      "points_per_match": 0.33,
+      "goal_diff": -4
+    },
+    "83": {
+      "team": "Barcelona",
+      "league": "LALIGA",
+      "attack": 2.1,
+      "defense": 0.653,
+      "squad_byrx_index": 2.68,
+      "points_per_match": 3.0,
+      "goal_diff": 27
+    },
+    "1068": {
+      "team": "Atl\u00e9tico Madrid",
+      "league": "LALIGA",
+      "attack": 1.679,
+      "defense": 0.746,
+      "squad_byrx_index": 1.8,
+      "points_per_match": 2.38,
+      "goal_diff": 10
+    },
+    "244": {
+      "team": "Real Betis",
+      "league": "LALIGA",
+      "attack": 1.306,
+      "defense": 0.84,
+      "squad_byrx_index": 1.56,
+      "points_per_match": 2.38,
+      "goal_diff": 5
+    },
+    "86": {
+      "team": "Real Madrid",
+      "league": "LALIGA",
+      "attack": 1.772,
+      "defense": 0.746,
+      "squad_byrx_index": 1.74,
+      "points_per_match": 2.25,
+      "goal_diff": 11
+    },
+    "243": {
+      "team": "Sevilla",
+      "league": "LALIGA",
+      "attack": 1.213,
+      "defense": 1.119,
+      "squad_byrx_index": 1.43,
+      "points_per_match": 1.75,
+      "goal_diff": 1
+    },
+    "89": {
+      "team": "Real Sociedad",
+      "league": "LALIGA",
+      "attack": 1.119,
+      "defense": 1.399,
+      "squad_byrx_index": 1.39,
+      "points_per_match": 1.62,
+      "goal_diff": -3
+    },
+    "96": {
+      "team": "Alav\u00e9s",
+      "league": "LALIGA",
+      "attack": 1.119,
+      "defense": 0.746,
+      "squad_byrx_index": 1.31,
+      "points_per_match": 1.38,
+      "goal_diff": 4
+    },
+    "90": {
+      "team": "Deportivo",
+      "league": "LALIGA",
+      "attack": 1.119,
+      "defense": 1.026,
+      "squad_byrx_index": 1.27,
+      "points_per_match": 1.25,
+      "goal_diff": 1
+    },
+    "85": {
+      "team": "Celta Vigo",
+      "league": "LALIGA",
+      "attack": 0.746,
+      "defense": 0.56,
+      "squad_byrx_index": 1.22,
+      "points_per_match": 1.0,
+      "goal_diff": 2
+    },
+    "93": {
+      "team": "Athletic Club",
+      "league": "LALIGA",
+      "attack": 0.871,
+      "defense": 0.746,
+      "squad_byrx_index": 1.0,
+      "points_per_match": 1.33,
+      "goal_diff": 1
+    },
+    "102": {
+      "team": "Villarreal",
+      "league": "LALIGA",
+      "attack": 1.213,
+      "defense": 1.213,
+      "squad_byrx_index": 1.28,
+      "points_per_match": 1.0,
+      "goal_diff": 0
+    },
+    "88": {
+      "team": "Espanyol",
+      "league": "LALIGA",
+      "attack": 1.026,
+      "defense": 1.026,
+      "squad_byrx_index": 1.2,
+      "points_per_match": 1.0,
+      "goal_diff": 0
+    },
+    "101": {
+      "team": "Rayo Vallecano",
+      "league": "LALIGA",
+      "attack": 1.173,
+      "defense": 1.706,
+      "squad_byrx_index": 1.21,
+      "points_per_match": 1.14,
+      "goal_diff": -5
+    },
+    "2922": {
+      "team": "Getafe",
+      "league": "LALIGA",
+      "attack": 0.55,
+      "defense": 0.933,
+      "squad_byrx_index": 0.77,
+      "points_per_match": 1.0,
+      "goal_diff": -6
+    },
+    "87": {
+      "team": "Racing Santander",
+      "league": "LALIGA",
+      "attack": 1.213,
+      "defense": 1.95,
+      "squad_byrx_index": 1.2,
+      "points_per_match": 1.0,
+      "goal_diff": -10
+    },
+    "97": {
+      "team": "Osasuna",
+      "league": "LALIGA",
+      "attack": 0.746,
+      "defense": 1.679,
+      "squad_byrx_index": 0.97,
+      "points_per_match": 1.0,
+      "goal_diff": -10
+    },
+    "1538": {
+      "team": "Levante",
+      "league": "LALIGA",
+      "attack": 1.173,
+      "defense": 1.599,
+      "squad_byrx_index": 1.23,
+      "points_per_match": 0.86,
+      "goal_diff": -4
+    },
+    "3751": {
+      "team": "Elche",
+      "league": "LALIGA",
+      "attack": 1.026,
+      "defense": 1.586,
+      "squad_byrx_index": 1.35,
+      "points_per_match": 0.75,
+      "goal_diff": -6
+    },
+    "94": {
+      "team": "Valencia",
+      "league": "LALIGA",
+      "attack": 0.56,
+      "defense": 1.399,
+      "squad_byrx_index": 1.19,
+      "points_per_match": 0.62,
+      "goal_diff": -9
+    },
+    "99": {
+      "team": "M\u00e1laga",
+      "league": "LALIGA",
+      "attack": 0.55,
+      "defense": 1.213,
+      "squad_byrx_index": 0.84,
+      "points_per_match": 0.5,
+      "goal_diff": -9
+    }
+  },
+  "next_model_pipeline": {
+    "upcoming_version": "2.0.0-xgboost-ensemble",
+    "planned_features": [
+      "rolling_5_match_xG",
+      "player_absence_impact_penalty",
+      "tactical_matchup_differential",
+      "fatigue_days_between_fixtures"
+    ],
+    "interface_ready": true
+  }
+}
