@@ -50,6 +50,24 @@ export interface MatchPredictionResult {
   };
   simulationRuns: number;
   modelVersion: string;
+  homeDefense: DefensiveProfile;
+  awayDefense: DefensiveProfile;
+  homeCleanSheetProb: number;
+  awayCleanSheetProb: number;
+}
+
+/** Multi-factor defensive strength profile for a single club. */
+export interface DefensiveProfile {
+  index: number;             // 0-100 composite Defensive Strength Index
+  tier: 'Elite' | 'Strong' | 'Average' | 'Leaky';
+  adjDefense: number;        // opponent-adjusted conceding multiplier (<1 = better than avg)
+  concededPerMatch: number;  // time-weighted goals against / match
+  cleanSheetRate: number;    // % of matches with 0 conceded
+  homeConcededPerMatch: number;
+  awayConcededPerMatch: number;
+  gkSavePct: number;         // primary keeper save %
+  recentForm: number;        // goals conceded / match over last 5
+  matches: number;
 }
 
 // Factorial helper for Poisson distribution
@@ -377,7 +395,78 @@ export function predictMatch(
     },
     simulationRuns: runs,
     modelVersion: ACTIVE_MODEL.version,
+    homeDefense: computeDefensiveProfile(homeTeamId),
+    awayDefense: computeDefensiveProfile(awayTeamId),
+    homeCleanSheetProb: Math.round(matrix.filter((s) => s.away === 0).reduce((a, s) => a + s.prob, 0) / totalP * 100),
+    awayCleanSheetProb: Math.round(matrix.filter((s) => s.home === 0).reduce((a, s) => a + s.prob, 0) / totalP * 100),
   };
+}
+
+const MATCHES = ((rawMatches as unknown as { matches: (PlayedMatch & { id: string })[] }).matches ?? []);
+const DEF_CACHE = new Map<string, DefensiveProfile>();
+
+/**
+ * Defensive Strength Index (0-100). Blends:
+ *   40% opponent-adjusted defence rating (from the fitted Poisson model)
+ *   20% clean-sheet rate
+ *   15% recent form (goals conceded, last 5)
+ *   15% goalkeeper save %
+ *   10% away resilience (conceding on the road vs at home)
+ */
+export function computeDefensiveProfile(teamId: string): DefensiveProfile {
+  const hit = DEF_CACHE.get(teamId);
+  if (hit) return hit;
+  const team = TEAMS.find((t) => t.id === teamId);
+  const model = team ? leagueStrengths(team.league) : null;
+  const adjDefense = model?.map.get(teamId)?.defense ?? 1;
+
+  const played = MATCHES.filter(
+    (m) => m.state === 'post' && m.homeGoals !== null && (m.homeId === teamId || m.awayId === teamId)
+  ).sort((a, b) => a.date.localeCompare(b.date));
+  const conc = (m: PlayedMatch) => (m.homeId === teamId ? m.awayGoals! : m.homeGoals!);
+  const home = played.filter((m) => m.homeId === teamId);
+  const away = played.filter((m) => m.awayId === teamId);
+  const avg = (xs: PlayedMatch[]) => (xs.length ? xs.reduce((a, m) => a + conc(m), 0) / xs.length : 1.35);
+
+  const concededPerMatch = avg(played);
+  const cleanSheetRate = played.length ? played.filter((m) => conc(m) === 0).length / played.length : 0.25;
+  const recentForm = avg(played.slice(-5));
+  const homeC = avg(home);
+  const awayC = avg(away);
+
+  const keepers = squadOf(teamId).filter((p) => p.pos === 'GK').sort((a, b) => b.stats.apps - a.stats.apps);
+  const gk = keepers[0];
+  const gkSavePct = gk && gk.stats.shotsFaced ? gk.stats.saves / gk.stats.shotsFaced : 0.68;
+
+  const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
+  const sDef = clamp01((1.6 - adjDefense) / 1.0);        // 0.6 → 1, 1.6 → 0
+  const sCS = clamp01(cleanSheetRate / 0.5);
+  const sForm = clamp01((2.5 - recentForm) / 2.5);
+  const sGK = clamp01((gkSavePct - 0.55) / 0.25);
+  const sAway = clamp01(1 - (awayC - homeC + 0.5) / 2);
+  const index = Math.round(100 * (0.4 * sDef + 0.2 * sCS + 0.15 * sForm + 0.15 * sGK + 0.1 * sAway));
+  const tier = index >= 75 ? 'Elite' : index >= 58 ? 'Strong' : index >= 40 ? 'Average' : 'Leaky';
+
+  const r2 = (x: number) => Math.round(x * 100) / 100;
+  const out: DefensiveProfile = {
+    index, tier, adjDefense: r2(adjDefense), concededPerMatch: r2(concededPerMatch),
+    cleanSheetRate: Math.round(cleanSheetRate * 100), homeConcededPerMatch: r2(homeC),
+    awayConcededPerMatch: r2(awayC), gkSavePct: Math.round(gkSavePct * 100),
+    recentForm: r2(recentForm), matches: played.length,
+  };
+  DEF_CACHE.set(teamId, out);
+  return out;
+}
+
+export interface UpcomingFixture { id: string; home: string; away: string; date: string; }
+
+/** Real upcoming fixtures from ESPN (scripts/fetch_fixtures.mjs). */
+export function upcomingFixtures(league: League, limit = 10): UpcomingFixture[] {
+  const now = Date.now() - 3 * 3600e3;
+  return MATCHES.filter((m) => m.league === league && m.state === 'pre' && Date.parse(m.date) >= now)
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(0, limit)
+    .map((m) => ({ id: m.id, home: m.homeId, away: m.awayId, date: m.date }));
 }
 
 /**
