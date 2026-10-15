@@ -46,6 +46,9 @@ class PredictorBase:
     def predict_match(self, home_team_id: str, away_team_id: str) -> Dict[str, Any]:
         raise NotImplementedError
 
+    def calculate_defensive_strength(self, team_id: str) -> Dict[str, Any]:
+        raise NotImplementedError
+
     def export_weights(self) -> Dict[str, Any]:
         raise NotImplementedError
 
