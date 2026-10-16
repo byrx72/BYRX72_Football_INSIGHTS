@@ -189,9 +189,18 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
             </div>
 
             <div>
-              <span className="text-[10px] font-mono tracking-[0.2em] uppercase font-bold text-slate-400 flex items-center gap-1.5">
-                CINEMATIC PERFORMANCE HUB · {league === 'PL' ? 'PREMIER LEAGUE' : 'LA LIGA EA SPORTS'}
-              </span>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-[10px] font-mono tracking-[0.2em] uppercase font-bold text-slate-400 flex items-center gap-1.5">
+                  CINEMATIC PERFORMANCE HUB · {league === 'PL' ? 'PREMIER LEAGUE' : 'LA LIGA EA SPORTS'}
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[9px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live 4K Tracking
+                </span>
+              </div>
+              <h3 className="font-display font-extrabold text-base sm:text-lg text-white tracking-tight flex items-center gap-2">
+                Biometric Intensity & Form Matrix
+              </h3>
             </div>
           </div>
 
