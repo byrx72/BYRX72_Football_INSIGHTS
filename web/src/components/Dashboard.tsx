@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import '@/app/dashboard.css';
 import {
-  League, Pos, Scored, GENERATED_AT, SEASON, ALL_PLAYERS, leaguePlayers, leagueStats, standingsFor, teamsFor, squadOf, teamOfTheWeek, SCORED, TEAMS,
+  League, Pos, Scored, GENERATED_AT, SEASON, ALL_PLAYERS, leaguePlayers, leagueStats, standingsFor, teamsFor, squadOf, teamOfTheWeek, SCORED, TEAMS, LEAGUE_LOGOS,
 } from '@/data/espn';
 import { CinematicLeagueAtmosphere } from './CinematicLeagueAtmosphere';
 import { ActivityShowcase } from './ActivityShowcase';
@@ -606,17 +606,26 @@ export default function Dashboard() {
       <aside className={`sidebar ${open ? 'open' : ''}`}>
         <div className="brand">
           <div
-            className="brand-mark font-display"
+            className="brand-mark font-display relative overflow-hidden group shadow-lg flex items-center justify-center p-1.5"
             style={{
-              background: league === 'PL' ? 'linear-gradient(135deg, #e90052, #8b008b)' : 'linear-gradient(135deg, #ea0029, #ff5722)',
-              color: '#ffffff',
+              background: league === 'PL'
+                ? 'linear-gradient(135deg, #38003c 0%, #e90052 100%)'
+                : 'linear-gradient(135deg, #1f0206 0%, #ea0029 100%)',
+              boxShadow: league === 'PL'
+                ? '0 0 24px rgba(233, 0, 82, 0.6)'
+                : '0 0 24px rgba(234, 0, 41, 0.6)',
             }}
           >
-            {league === 'PL' ? 'PL' : 'LL'}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={LEAGUE_LOGOS[league].dark}
+              alt={LEAGUE_LOGOS[league].name}
+              className="w-full h-full object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] group-hover:scale-110 transition-transform duration-300"
+            />
           </div>
           <div className="brand-copy">
             <strong className="font-display">football insights</strong>
-            <span>influence, quantified</span>
+            <span>{LEAGUE_LOGOS[league].name}</span>
           </div>
         </div>
         <div className="nav-label">Workspace</div>
