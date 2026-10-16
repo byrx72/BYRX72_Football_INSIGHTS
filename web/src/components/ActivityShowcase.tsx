@@ -204,35 +204,57 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
             </div>
           </div>
 
-        {/* Star Spotlight Selector Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-          <span className="text-[11px] text-slate-400 font-mono mr-1 hidden sm:inline">Star Spotlight:</span>
-          {availableStars.slice(0, 7).map((star) => {
-            const isSelected = activePlayer.id === star.id;
-            const photo = getPlayerPhoto(star);
-            return (
-              <button
-                key={star.id}
-                onClick={() => setActivePlayer(star)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  isSelected
-                    ? isPL
-                      ? 'bg-[#e90052] text-white shadow-lg shadow-[#e90052]/30 scale-105'
-                      : 'bg-[#ea0029] text-white shadow-lg shadow-[#ea0029]/30 scale-105'
-                    : 'bg-black/60 text-slate-300 border border-white/10 hover:border-white/30 hover:text-white'
-                }`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo}
-                  alt={star.name}
-                  className="w-4 h-4 rounded-full object-cover bg-slate-800"
-                />
-                <span>{star.short}</span>
-              </button>
-            );
-          })}
-        </div>
+          {/* Star Spotlight Deluxe Player Switcher Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
+            <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1 mr-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              Star Spotlight:
+            </span>
+
+            <div className="flex items-center gap-2">
+              {availableStars.slice(0, 8).map((star) => {
+                const isSelected = activePlayer.id === star.id;
+                const photo = getPlayerPhoto(star);
+                return (
+                  <button
+                    key={star.id}
+                    onClick={() => setActivePlayer(star)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-all duration-300 shrink-0 group ${
+                      isSelected
+                        ? isPL
+                          ? 'bg-[#e90052] text-white shadow-lg shadow-[#e90052]/40 scale-[1.03] border border-white/40'
+                          : 'bg-[#ea0029] text-white shadow-lg shadow-[#ea0029]/40 scale-[1.03] border border-white/40'
+                        : 'bg-black/60 text-slate-300 border border-white/10 hover:border-white/30 hover:bg-white/[0.08] hover:text-white'
+                    }`}
+                  >
+                    {/* Player Headshot with Club Crest Overlaid */}
+                    <div className="relative w-6 h-6 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={photo}
+                        alt={star.name}
+                        className="w-full h-full rounded-full object-cover bg-slate-800 ring-1 ring-white/30"
+                      />
+                      {star.crest && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={star.crest}
+                          alt={star.teamShort}
+                          className="absolute -bottom-1 -right-1 w-3.5 h-3.5 object-contain rounded-full bg-black/90 p-0.5 border border-white/30"
+                        />
+                      )}
+                    </div>
+
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-xs font-display font-bold tracking-tight">
+                        {star.short}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
