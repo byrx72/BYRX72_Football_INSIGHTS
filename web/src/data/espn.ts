@@ -31,6 +31,41 @@ export const TEAMS = db.teams;
 export const STANDINGS = db.standings;
 export const ALL_PLAYERS = db.players;
 
+export const LEAGUE_LOGOS: Record<
+  League,
+  {
+    dark: string;
+    light: string;
+    name: string;
+    short: string;
+    color: string;
+    glow: string;
+    accent: string;
+    country: string;
+  }
+> = {
+  PL: {
+    dark: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/23.png',
+    light: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png',
+    name: 'Premier League',
+    short: 'PL',
+    color: '#e90052',
+    glow: 'rgba(233, 0, 82, 0.45)',
+    accent: '#38003c',
+    country: 'England',
+  },
+  LALIGA: {
+    dark: 'https://a.espncdn.com/i/leaguelogos/soccer/500-dark/15.png',
+    light: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png',
+    name: 'La Liga',
+    short: 'LL',
+    color: '#ea0029',
+    glow: 'rgba(234, 0, 41, 0.45)',
+    accent: '#ff5722',
+    country: 'Spain',
+  },
+};
+
 const rankByTeam = new Map(db.standings.map((s) => [s.teamId, s]));
 
 /** Raw value-added per appearance, position specific. */
