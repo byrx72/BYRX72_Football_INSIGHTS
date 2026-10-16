@@ -641,7 +641,19 @@ export default function Dashboard() {
       </aside>
       <div className="main">
         <div className="mobile-topbar">
-          <div className="brand" style={{ padding: 0 }}><div className="brand-mark font-display">{league === 'PL' ? 'PL' : 'LL'}</div><div className="brand-copy"><strong className="font-display">football insights</strong></div></div>
+          <div className="brand" style={{ padding: 0 }}>
+            <div
+              className="brand-mark font-display flex items-center justify-center p-1"
+              style={{
+                background: league === 'PL' ? 'linear-gradient(135deg, #38003c, #e90052)' : 'linear-gradient(135deg, #1f0206, #ea0029)',
+                boxShadow: league === 'PL' ? '0 0 16px rgba(233,0,82,0.5)' : '0 0 16px rgba(234,0,41,0.5)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={LEAGUE_LOGOS[league].dark} alt={LEAGUE_LOGOS[league].name} className="w-6 h-6 object-contain" />
+            </div>
+            <div className="brand-copy"><strong className="font-display">football insights</strong></div>
+          </div>
           <button className="seg" style={{ padding: 8, color: '#e8efe6' }} onClick={() => setOpen(!open)} aria-label="Menu"><Menu size={18} /></button>
         </div>
         <header className="topbar">
