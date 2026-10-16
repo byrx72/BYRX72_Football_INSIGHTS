@@ -677,16 +677,18 @@ export default function Dashboard() {
                       isActive
                         ? isThisPL
                           ? 'bg-gradient-to-r from-[#e90052] via-[#b80041] to-[#38003c] text-white shadow-[0_0_24px_rgba(233,0,82,0.65)] border border-white/40 scale-[1.02]'
-                          : 'bg-[#ea0029] text-white shadow-lg border border-white/30'
+                          : 'bg-gradient-to-r from-[#ea0029] via-[#d60025] to-[#ff5722] text-white shadow-[0_0_24px_rgba(234,0,41,0.65)] border border-white/40 scale-[1.02]'
                         : 'text-slate-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
                     }`}
                   >
                     {/* Official League Logo: Crowned Lion extra noticeable */}
                     <div
                       className={`relative flex items-center justify-center rounded-lg transition-transform duration-300 ${
-                        isActive && isThisPL
-                          ? 'w-7 h-7 p-0.5 bg-white/15 ring-2 ring-white/50 shadow-[0_0_14px_rgba(255,255,255,0.7)]'
-                          : 'w-6 h-6 p-0.5 opacity-70 group-hover:opacity-100 group-hover:scale-110'
+                        isActive
+                          ? isThisPL
+                            ? 'w-7 h-7 p-0.5 bg-white/15 ring-2 ring-white/50 shadow-[0_0_14px_rgba(255,255,255,0.7)]'
+                            : 'w-6 h-6 p-0.5 bg-white/10 ring-1 ring-white/30 shadow-[0_0_10px_rgba(255,255,255,0.4)]'
+                          : 'w-6 h-6 opacity-70 group-hover:opacity-100 group-hover:scale-110'
                       }`}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -696,13 +698,30 @@ export default function Dashboard() {
                         className={`object-contain transition-all ${
                           isThisPL
                             ? 'w-full h-full drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] filter brightness-110'
-                            : 'w-full h-full'
+                            : 'w-full h-full drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]'
                         }`}
                       />
                     </div>
+
                     <span className="tracking-tight whitespace-nowrap font-bold">
                       {meta.name}
                     </span>
+
+                    {/* Active live indicator dot */}
+                    {isActive && (
+                      <span className="relative flex h-2 w-2 ml-0.5">
+                        <span
+                          className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
+                            isThisPL ? 'bg-[#00ff87]' : 'bg-[#ffea00]'
+                          }`}
+                        />
+                        <span
+                          className={`relative inline-flex rounded-full h-2 w-2 ${
+                            isThisPL ? 'bg-[#00ff87]' : 'bg-[#ffea00]'
+                          }`}
+                        />
+                      </span>
+                    )}
                   </button>
                 );
               })}
