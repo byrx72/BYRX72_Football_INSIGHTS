@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { League, Scored } from '@/data/espn';
-import { ArrowUpRight, Heart, Droplets, Zap, Shield, Flame, Activity } from 'lucide-react';
+import { League, Scored, LEAGUE_LOGOS } from '@/data/espn';
+import { ArrowUpRight, Heart, Droplets, Zap, Shield, Flame, Activity, Sparkles } from 'lucide-react';
 import { getPlayerPhoto } from '@/lib/playerPhotos';
 
 interface ActivityShowcaseProps {
@@ -152,18 +152,48 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
 
   return (
     <section className="relative z-10 w-full mb-10">
-      {/* Star Player Quick Switcher Carousel */}
-      <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-2.5 h-2.5 rounded-full animate-ping ${
-              isPL ? 'bg-[#e90052]' : 'bg-[#ff5722]'
-            }`}
-          />
-          <span className="text-[11px] font-mono tracking-[0.2em] uppercase font-bold text-slate-300">
-            CINEMATIC PERFORMANCE SPOTLIGHT · {league === 'PL' ? 'PREMIER LEAGUE' : 'LA LIGA EA SPORTS'}
-          </span>
-        </div>
+      {/* Cinematic Performance Hub Banner & Star Player Carousel */}
+      <div className="bg-gradient-to-r from-[#0d1017]/95 via-[#121622]/90 to-[#0d1017]/95 backdrop-blur-2xl border border-white/10 rounded-[28px] p-4 sm:p-5 mb-6 shadow-2xl relative overflow-hidden">
+        {/* Subtle ambient league glow behind header */}
+        <div
+          className="absolute -top-16 -left-16 w-56 h-56 rounded-full blur-[80px] pointer-events-none opacity-30"
+          style={{ background: isPL ? '#e90052' : '#ea0029' }}
+        />
+
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-10">
+          {/* Header Title with Dynamic League Crest & Broadcast Live Status */}
+          <div className="flex items-center gap-3.5">
+            {/* Dynamic League Badge with pulsating halo (Premier League Lion Noticeable!) */}
+            <div
+              className="relative flex items-center justify-center w-12 h-12 rounded-2xl p-2 shrink-0 border transition-all shadow-xl"
+              style={{
+                background: isPL
+                  ? 'linear-gradient(135deg, #38003c 0%, #e90052 100%)'
+                  : 'linear-gradient(135deg, #1f0206 0%, #ea0029 100%)',
+                borderColor: isPL ? 'rgba(233, 0, 82, 0.5)' : 'rgba(234, 0, 41, 0.5)',
+                boxShadow: isPL
+                  ? '0 0 20px rgba(233, 0, 82, 0.6)'
+                  : '0 0 20px rgba(234, 0, 41, 0.6)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={LEAGUE_LOGOS[league].dark}
+                alt={LEAGUE_LOGOS[league].name}
+                className="w-full h-full object-contain drop-shadow-[0_2px_10px_rgba(255,255,255,0.7)] filter brightness-110"
+              />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-black" />
+              </span>
+            </div>
+
+            <div>
+              <span className="text-[10px] font-mono tracking-[0.2em] uppercase font-bold text-slate-400 flex items-center gap-1.5">
+                CINEMATIC PERFORMANCE HUB · {league === 'PL' ? 'PREMIER LEAGUE' : 'LA LIGA EA SPORTS'}
+              </span>
+            </div>
+          </div>
 
         {/* Star Spotlight Selector Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
@@ -193,6 +223,7 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
               </button>
             );
           })}
+        </div>
         </div>
       </div>
 
