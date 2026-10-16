@@ -663,17 +663,34 @@ export default function Dashboard() {
               <Search size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#68766b' }} />
               <input className="top-input font-mono" placeholder="Search players or clubs" value={query} onChange={(e) => onSearch(e.target.value)} aria-label="Search players" />
             </div>
-            <div className="seg">
-              {(['PL', 'LALIGA'] as League[]).map((l) => (
-                <button
-                  key={l}
-                  className={league === l ? 'on' : ''}
-                  style={league === l ? { backgroundColor: l === 'PL' ? '#e90052' : '#ea0029', color: '#ffffff' } : {}}
-                  onClick={() => { setLeague(l); setClub(null); }}
-                >
-                  {LEAGUE_NAME[l]}
-                </button>
-              ))}
+            {/* Dynamic League Switcher with Noticeable Official Logos */}
+            <div className="flex items-center p-1 bg-black/75 backdrop-blur-xl border border-white/15 rounded-2xl gap-1.5 shadow-2xl">
+              {(['PL', 'LALIGA'] as League[]).map((l) => {
+                const isActive = league === l;
+                const isThisPL = l === 'PL';
+                const meta = LEAGUE_LOGOS[l];
+                return (
+                  <button
+                    key={l}
+                    onClick={() => { setLeague(l); setClub(null); }}
+                    className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-display font-extrabold transition-all duration-300 group ${
+                      isActive
+                        ? isThisPL
+                          ? 'bg-[#e90052] text-white shadow-lg border border-white/30'
+                          : 'bg-[#ea0029] text-white shadow-lg border border-white/30'
+                        : 'text-slate-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
+                    }`}
+                  >
+                    <div className="w-6 h-6 p-0.5 flex items-center justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={meta.dark} alt={meta.name} className="w-full h-full object-contain" />
+                    </div>
+                    <span className="tracking-tight whitespace-nowrap font-bold">
+                      {meta.name}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </header>
