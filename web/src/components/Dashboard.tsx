@@ -676,14 +676,29 @@ export default function Dashboard() {
                     className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-display font-extrabold transition-all duration-300 group ${
                       isActive
                         ? isThisPL
-                          ? 'bg-[#e90052] text-white shadow-lg border border-white/30'
+                          ? 'bg-gradient-to-r from-[#e90052] via-[#b80041] to-[#38003c] text-white shadow-[0_0_24px_rgba(233,0,82,0.65)] border border-white/40 scale-[1.02]'
                           : 'bg-[#ea0029] text-white shadow-lg border border-white/30'
                         : 'text-slate-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
                     }`}
                   >
-                    <div className="w-6 h-6 p-0.5 flex items-center justify-center">
+                    {/* Official League Logo: Crowned Lion extra noticeable */}
+                    <div
+                      className={`relative flex items-center justify-center rounded-lg transition-transform duration-300 ${
+                        isActive && isThisPL
+                          ? 'w-7 h-7 p-0.5 bg-white/15 ring-2 ring-white/50 shadow-[0_0_14px_rgba(255,255,255,0.7)]'
+                          : 'w-6 h-6 p-0.5 opacity-70 group-hover:opacity-100 group-hover:scale-110'
+                      }`}
+                    >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={meta.dark} alt={meta.name} className="w-full h-full object-contain" />
+                      <img
+                        src={meta.dark}
+                        alt={meta.name}
+                        className={`object-contain transition-all ${
+                          isThisPL
+                            ? 'w-full h-full drop-shadow-[0_0_10px_rgba(255,255,255,0.9)] filter brightness-110'
+                            : 'w-full h-full'
+                        }`}
+                      />
                     </div>
                     <span className="tracking-tight whitespace-nowrap font-bold">
                       {meta.name}
