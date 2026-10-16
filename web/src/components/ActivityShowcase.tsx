@@ -222,8 +222,8 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-all duration-300 shrink-0 group ${
                       isSelected
                         ? isPL
-                          ? 'bg-[#e90052] text-white shadow-lg shadow-[#e90052]/40 scale-[1.03] border border-white/40'
-                          : 'bg-[#ea0029] text-white shadow-lg shadow-[#ea0029]/40 scale-[1.03] border border-white/40'
+                          ? 'bg-gradient-to-r from-[#e90052] via-[#b80041] to-[#7928ca] text-white shadow-lg shadow-[#e90052]/40 scale-[1.03] border border-white/40'
+                          : 'bg-gradient-to-r from-[#ea0029] via-[#d60025] to-[#ff5722] text-white shadow-lg shadow-[#ea0029]/40 scale-[1.03] border border-white/40'
                         : 'bg-black/60 text-slate-300 border border-white/10 hover:border-white/30 hover:bg-white/[0.08] hover:text-white'
                     }`}
                   >
@@ -248,6 +248,13 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                     <div className="flex flex-col items-start leading-none">
                       <span className="text-xs font-display font-bold tracking-tight">
                         {star.short}
+                      </span>
+                      <span
+                        className={`text-[9px] font-mono mt-0.5 ${
+                          isSelected ? 'text-white/80' : 'text-slate-400'
+                        }`}
+                      >
+                        {star.pos} · {star.score.toFixed(1)}★
                       </span>
                     </div>
                   </button>
