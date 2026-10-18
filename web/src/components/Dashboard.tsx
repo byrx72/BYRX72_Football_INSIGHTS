@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import {
-  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain,
+  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain, Flame, Trophy,
 } from 'lucide-react';
 import '@/app/dashboard.css';
 import {
@@ -184,9 +184,23 @@ function Radar({ players, colors }: { players: Scored[]; colors: string[] }) {
 /* ───────────── Views ───────────── */
 
 function PlayerRow({ p, onOpen }: { p: Scored; onOpen: (p: Scored) => void }) {
+  const isGold = p.rank === 1;
+  const isSilver = p.rank === 2;
+  const isBronze = p.rank === 3;
+
   return (
     <button className="player-row" onClick={() => onOpen(p)}>
-      <span className="rank">{String(p.rank).padStart(2, '0')}</span>
+      <span>
+        {isGold ? (
+          <span className="rank-badge rank-gold" title="Rank 1">#01</span>
+        ) : isSilver ? (
+          <span className="rank-badge rank-silver" title="Rank 2">#02</span>
+        ) : isBronze ? (
+          <span className="rank-badge rank-bronze" title="Rank 3">#03</span>
+        ) : (
+          <span className="rank">{String(p.rank).padStart(2, '0')}</span>
+        )}
+      </span>
       <span className="player-cell">
         <Avatar p={p} cls="row-avatar" />
         <span style={{ minWidth: 0 }}>
@@ -194,11 +208,22 @@ function PlayerRow({ p, onOpen }: { p: Scored; onOpen: (p: Scored) => void }) {
           <span className="player-sub">{p.nationality || '—'} · {p.stats.apps} apps</span>
         </span>
       </span>
-      <span className="club-cell">{/* eslint-disable-next-line @next/next/no-img-element */}<img className="crest" src={p.crest} alt="" />{p.team}</span>
+      <span className="club-cell">{/* eslint-disable-next-line @next/next/no-img-element */}<img className="crest" src={p.crest} alt="" /><span>{p.team}</span></span>
       <span><span className={`position-tag pos-${p.pos}`}>{p.pos}</span></span>
       <span>
         <span className="score-cell">{p.score.toFixed(2)}</span>
-        <div className="scorebar"><i style={{ width: `${(p.score / 10) * 100}%` }} /></div>
+        <div className="scorebar">
+          <i
+            style={{
+              width: `${(p.score / 10) * 100}%`,
+              background: p.score >= 8.5
+                ? 'linear-gradient(90deg, #38bdf8, #00ff87)'
+                : p.score >= 7.0
+                ? 'linear-gradient(90deg, #a855f7, #38bdf8)'
+                : 'linear-gradient(90deg, #64748b, #94a3b8)',
+            }}
+          />
+        </div>
       </span>
       <span className="num">{p.stats.goals}<span style={{ color: '#55635a' }}> G</span></span>
       <span className="num">{p.stats.assists}<span style={{ color: '#55635a' }}> A</span></span>
@@ -252,8 +277,15 @@ function Overview({ league, onOpen, go }: { league: League; onOpen: (p: Scored) 
         <div className="hero-card panel">
           <div className="hero-top">
             <div>
-              <div className="eyebrow">League leader · {league === 'PL' ? 'England' : 'Spain'}</div>
-              <div style={{ color: '#8b9b8e', fontSize: 11, marginTop: 8 }}>Position-adjusted season score</div>
+              <div className="eyebrow flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/15 border border-amber-500/30 text-amber-300">
+                  <Trophy size={11} className="text-amber-400" />
+                  LEAGUE MVP FRONT-RUNNER
+                </span>
+                <span className="hidden sm:inline" style={{ color: '#64748b' }}>·</span>
+                <span className="hidden sm:inline font-mono">{league === 'PL' ? 'England' : 'Spain'}</span>
+              </div>
+              <div style={{ color: '#8b9b8e', fontSize: 11, marginTop: 8 }}>Position-adjusted season impact score</div>
             </div>
             <div className="hero-rating">{top?.score.toFixed(2)}<small>/10</small></div>
           </div>
@@ -262,16 +294,28 @@ function Overview({ league, onOpen, go }: { league: League; onOpen: (p: Scored) 
               <div className="hero-main">
                 <Avatar p={top} cls="hero-avatar" />
                 <div>
-                  <div className="hero-player-label">Current #01</div>
+                  <div className="hero-player-label">Current #01 in League</div>
                   <h2 className="hero-player">{top.name}</h2>
                   <div className="hero-club">{/* eslint-disable-next-line @next/next/no-img-element */}<img className="crest" src={top.crest} alt="" />{top.team} · {top.pos} · {top.minutes} mins</div>
                 </div>
               </div>
               <div className="hero-meta">
-                <div className="hero-meta-item"><span>Goals</span><b>{top.stats.goals}</b></div>
-                <div className="hero-meta-item"><span>Assists</span><b>{top.stats.assists}</b></div>
-                <div className="hero-meta-item"><span>Context</span><b>{top.context.toFixed(2)}×</b></div>
-                <button className="text-btn" onClick={() => onOpen(top)}>View profile <ArrowUpRight size={14} /></button>
+                <div className="hero-meta-item">
+                  <span className="flex items-center gap-1 text-slate-400"><Flame size={11} className="text-orange-400" /> Goals</span>
+                  <b>{top.stats.goals}</b>
+                </div>
+                <div className="hero-meta-item">
+                  <span className="flex items-center gap-1 text-slate-400"><Sparkles size={11} className="text-amber-400" /> Assists</span>
+                  <b>{top.stats.assists}</b>
+                </div>
+                <div className="hero-meta-item">
+                  <span className="flex items-center gap-1 text-slate-400"><Activity size={11} className="text-emerald-400" /> Context</span>
+                  <b>{top.context.toFixed(2)}×</b>
+                </div>
+                <button className="text-btn group" onClick={() => onOpen(top)}>
+                  <span>View profile</span>
+                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
               </div>
             </>
           )}
@@ -659,9 +703,26 @@ export default function Dashboard() {
         <header className="topbar">
           <div className="breadcrumb font-mono text-xs">{SEASON} season <span style={{ color: '#4f5e51' }}> / </span> <b>{NAV.find((n) => n.id === view)?.label ?? 'Inspect the math'}</b></div>
           <div className="top-actions">
-            <div style={{ position: 'relative' }}>
-              <Search size={14} style={{ position: 'absolute', left: 11, top: 11, color: '#68766b' }} />
-              <input className="top-input font-mono" placeholder="Search players or clubs" value={query} onChange={(e) => onSearch(e.target.value)} aria-label="Search players" />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Search size={14} style={{ position: 'absolute', left: 12, color: '#68766b', pointerEvents: 'none' }} />
+              <input
+                className="top-input font-mono"
+                placeholder="Search players or clubs..."
+                value={query}
+                onChange={(e) => onSearch(e.target.value)}
+                aria-label="Search players"
+              />
+              {query ? (
+                <button
+                  onClick={() => onSearch('')}
+                  style={{ position: 'absolute', right: 10, background: 'none', border: 0, color: '#94a3b8', cursor: 'pointer', display: 'grid', placeItems: 'center' }}
+                  title="Clear search"
+                >
+                  <X size={13} />
+                </button>
+              ) : (
+                <span className="kbd-hint hidden sm:inline">⌘K</span>
+              )}
             </div>
             {/* Dynamic League Switcher with Noticeable Official Logos */}
             <div className="flex items-center p-1 bg-black/75 backdrop-blur-xl border border-white/15 rounded-2xl gap-1.5 shadow-2xl">
