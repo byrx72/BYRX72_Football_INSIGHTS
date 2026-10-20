@@ -109,9 +109,12 @@
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .pad { padding: 22px; }
 /* table */
-.lt-row { display: grid; grid-template-columns: 36px 2fr repeat(7, 1fr) 1.4fr; gap: 8px; align-items: center; padding: 0 20px; height: 50px; border-bottom: 1px solid rgba(214,247,123,.05); font-size: 13px; cursor: pointer; transition: background .15s; }
-.lt-row:hover { background: rgba(214,247,123,.04); } .lt-head { height: 40px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); cursor: default; } .lt-head:hover { background: none; }
-.zone-ucl { box-shadow: inset 3px 0 var(--lime); } .zone-rel { box-shadow: inset 3px 0 #f57b7b; } .zone-uel { box-shadow: inset 3px 0 #6bc4f5; }
+.lt-row { display: grid; grid-template-columns: 40px 2.2fr repeat(8, 1fr) 1.2fr; gap: 8px; align-items: center; padding: 0 20px; height: 54px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13.5px; cursor: pointer; transition: all .15s ease; }
+.lt-row:hover { background: rgba(255,255,255,.04); transform: translateX(3px); }
+.lt-head { height: 42px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--dim); cursor: default; border-bottom: 1px solid rgba(255,255,255,.1); } .lt-head:hover { background: none; transform: none; }
+.zone-ucl { box-shadow: inset 3.5px 0 #00ff87; }
+.zone-uel { box-shadow: inset 3.5px 0 #38bdf8; }
+.zone-rel { box-shadow: inset 3.5px 0 #f57b7b; }
 .form-dots { display: flex; gap: 4px; } .form-dots i { width: 8px; height: 8px; border-radius: 50%; }
 /* pitch */
 .pitch { position: relative; aspect-ratio: 68/92; max-width: 580px; margin: 0 auto; border-radius: 28px; overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(16, 52, 28, 0.95), rgba(7, 24, 13, 0.98)), repeating-linear-gradient(180deg, rgba(20, 48, 28, 0.8) 0 8.33%, rgba(22, 55, 34, 0.8) 8.33% 16.66%); border: 1.5px solid rgba(0, 255, 135, 0.25); box-shadow: 0 35px 90px rgba(0,0,0,.7), inset 0 0 100px rgba(0,0,0,.5); }

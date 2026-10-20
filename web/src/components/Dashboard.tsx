@@ -669,20 +669,73 @@ function LeagueTable({ league, onClub }: { league: League; onClub: (id: string) 
   return (
     <>
       <div className="page-heading">
-        <div><div className="eyebrow">{LEAGUE_NAME[league]} · {SEASON}</div><h1>League <em>table.</em></h1></div>
-        <p>Live standings from ESPN. Lime = Champions League places, blue = Europa, red = relegation.</p>
+        <div>
+          <div className="eyebrow">{LEAGUE_NAME[league]} · {SEASON}</div>
+          <h1>League <em>standings.</em></h1>
+        </div>
+        <p>Live standings from ESPN. Interactive clubs, goal difference indices, and qualification thresholds.</p>
       </div>
+
+      {/* Qualification Threshold Legends */}
+      <div className="flex flex-wrap items-center gap-4 mb-4 px-4 py-2.5 rounded-xl bg-black/50 border border-white/10 text-xs font-mono text-slate-300">
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#00ff87] shadow-[0_0_8px_rgba(0,255,135,0.8)]" />
+          <span>UEFA Champions League (Top 4)</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8] shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+          <span>Europa League (5-6)</span>
+        </span>
+        <span className="flex items-center gap-1.5 ml-auto">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#f57b7b] shadow-[0_0_8px_rgba(245,123,123,0.8)]" />
+          <span>Relegation Zone (Bottom 3)</span>
+        </span>
+      </div>
+
       <div className="panel" style={{ overflow: 'hidden' }}>
-        <div className="lt-row lt-head"><span>#</span><span>Club</span><span>P</span><span>W</span><span>D</span><span>L</span><span>GF</span><span>GA</span><span>Pts</span></div>
+        <div className="lt-row lt-head">
+          <span>#</span>
+          <span>Club</span>
+          <span>P</span>
+          <span>W</span>
+          <span>D</span>
+          <span>L</span>
+          <span>GF</span>
+          <span>GA</span>
+          <span>GD</span>
+          <span style={{ textAlign: 'right', paddingRight: 6 }}>Pts</span>
+        </div>
         {std.map((s) => {
           const zone = s.rank <= 4 ? 'zone-ucl' : s.rank <= 6 ? 'zone-uel' : s.rank > n - 3 ? 'zone-rel' : '';
+          const gdSign = s.gd > 0 ? `+${s.gd}` : `${s.gd}`;
+          const isPositiveGd = s.gd > 0;
+          const isNegativeGd = s.gd < 0;
+
           return (
-            <div key={s.teamId} className={`lt-row ${zone}`} onClick={() => onClub(s.teamId)}>
-              <span className="rank">{s.rank}</span>
-              <span className="club-cell" style={{ color: '#e8efe6', fontWeight: 600 }}>{/* eslint-disable-next-line @next/next/no-img-element */}<img className="crest" src={TEAMS.find((t) => t.id === s.teamId)?.crest} alt="" />{s.team}</span>
-              <span className="num">{s.played}</span><span className="num">{s.wins}</span><span className="num">{s.draws}</span><span className="num">{s.losses}</span>
-              <span className="num">{s.gf}</span><span className="num">{s.ga}</span>
-              <span><b className="num" style={{ color: '#d6f77b' }}>{s.points}</b><div className="scorebar"><i style={{ width: `${(s.points / (s.played * 3 || 1)) * 100}%` }} /></div></span>
+            <div key={s.teamId} className={`lt-row ${zone} group`} onClick={() => onClub(s.teamId)}>
+              <span className={`rank font-bold ${s.rank <= 4 ? 'text-[#00ff87]' : s.rank <= 6 ? 'text-[#38bdf8]' : s.rank > n - 3 ? 'text-[#f57b7b]' : ''}`}>
+                {s.rank}
+              </span>
+              <span className="club-cell" style={{ color: '#e8efe6', fontWeight: 600 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="crest" src={TEAMS.find((t) => t.id === s.teamId)?.crest} alt="" />
+                <span className="group-hover:text-white transition-colors">{s.team}</span>
+              </span>
+              <span className="num">{s.played}</span>
+              <span className="num">{s.wins}</span>
+              <span className="num">{s.draws}</span>
+              <span className="num">{s.losses}</span>
+              <span className="num">{s.gf}</span>
+              <span className="num">{s.ga}</span>
+              <span className={`num font-semibold text-xs ${isPositiveGd ? 'text-[#00ff87]' : isNegativeGd ? 'text-[#f57b7b]' : 'text-slate-400'}`}>
+                {gdSign}
+              </span>
+              <div>
+                <b className="num" style={{ color: '#00ff87', fontSize: 14 }}>{s.points}</b>
+                <div className="scorebar">
+                  <i style={{ width: `${(s.points / (s.played * 3 || 1)) * 100}%` }} />
+                </div>
+              </div>
             </div>
           );
         })}
