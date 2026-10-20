@@ -464,25 +464,75 @@ function LeaderboardView({ league, onOpen, query }: { league: League; onOpen: (p
 
 function Totw({ league, onOpen }: { league: League; onOpen: (p: Scored) => void }) {
   const xi = teamOfTheWeek(league);
-  const rows: { y: number; xs: number[] }[] = [{ y: 90, xs: [50] }, { y: 70, xs: [14, 38, 62, 86] }, { y: 45, xs: [24, 50, 76] }, { y: 20, xs: [20, 50, 80] }];
+  const posLabels = ['GK', 'LB', 'CB', 'CB', 'RB', 'LCM', 'CM', 'RCM', 'LW', 'ST', 'RW'];
+  const rows: { y: number; xs: number[] }[] = [
+    { y: 88, xs: [50] },
+    { y: 68, xs: [14, 38, 62, 86] },
+    { y: 44, xs: [24, 50, 76] },
+    { y: 20, xs: [20, 50, 80] },
+  ];
   let k = 0;
-  const placed = rows.flatMap((r) => r.xs.map((x) => ({ x, y: r.y, p: xi[k++] })));
+  const placed = rows.flatMap((r) => r.xs.map((x) => ({ x, y: r.y, p: xi[k], slot: posLabels[k++] })));
+
+  const avgRating = xi.length > 0
+    ? (xi.reduce((acc, curr) => acc + curr.score, 0) / xi.length).toFixed(2)
+    : '0.00';
+
+  const captainId = [...xi].sort((a, b) => b.score - a.score)[0]?.id;
+
   return (
     <>
       <div className="page-heading">
-        <div><div className="eyebrow">{LEAGUE_NAME[league]} · best XI</div><h1>Team of <em>the season.</em></h1></div>
-        <p>The highest BYRX score at every position, laid out in a 4-3-3. Click a player for the full profile.</p>
+        <div>
+          <div className="eyebrow">{LEAGUE_NAME[league]} · BEST ELEVEN</div>
+          <h1>Team of <em>the season.</em></h1>
+        </div>
+        <p>The highest BYRX score at every position, tactical 4-3-3 formation. Click any player for full analytical breakdown.</p>
       </div>
+
+      {/* Tactical Pitch Header Info Banner */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 p-4 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-xl shadow-xl max-w-[580px] mx-auto">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+            <Shield size={16} />
+          </div>
+          <div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">Formation</div>
+            <div className="text-xs font-display font-black text-white">4-3-3 Attack Vector</div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">XI Squad Average</div>
+            <div className="text-sm font-display font-black text-emerald-400">{avgRating}★ / 10</div>
+          </div>
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+        </div>
+      </div>
+
       <div className="pitch">
         <svg className="lines" viewBox="0 0 68 92" preserveAspectRatio="none" fill="none" stroke="rgba(255,255,255,.25)" strokeWidth=".35">
           <rect x="2" y="2" width="64" height="88" /><line x1="2" y1="46" x2="66" y2="46" /><circle cx="34" cy="46" r="8" />
           <rect x="14" y="2" width="40" height="15" /><rect x="14" y="75" width="40" height="15" /><rect x="25" y="2" width="18" height="6" /><rect x="25" y="84" width="18" height="6" />
         </svg>
-        {placed.map(({ x, y, p }) => p && (
+        {placed.map(({ x, y, p, slot }) => p && (
           <div key={p.id} className="pitch-player" style={{ left: `${x}%`, top: `${y}%` }} onClick={() => onOpen(p)}>
-            <Avatar p={p} cls="" />
+            <div className="pitch-avatar-wrap">
+              <Avatar p={p} cls="pitch-img" />
+              {p.crest && (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={p.crest} alt="" className="pitch-crest" />
+              )}
+              {p.id === captainId && (
+                <div className="pitch-captain" title="Squad Captain">C</div>
+              )}
+            </div>
             <div className="nm">{p.short}</div>
-            <span className="sc">{p.score.toFixed(2)}</span>
+            <span className="sc">
+              <span className="opacity-70 text-[9px] mr-0.5">{slot}</span>
+              {p.score.toFixed(2)}
+            </span>
           </div>
         ))}
       </div>
