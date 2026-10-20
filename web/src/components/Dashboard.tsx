@@ -545,45 +545,117 @@ function Compare({ league }: { league: League }) {
   const [a, setA] = useState(0);
   const [b, setB] = useState(1);
   const A = pool[a] ?? pool[0], B = pool[b] ?? pool[1];
-  const rows: [string, (p: Scored) => number | string][] = [
-    ['BYRX score', (p) => p.score.toFixed(2)], ['Appearances', (p) => p.stats.apps], ['Goals', (p) => p.stats.goals], ['Assists', (p) => p.stats.assists],
-    ['Shots on target', (p) => p.stats.sot], ['Shots', (p) => p.stats.shots], ['Fouls suffered', (p) => p.stats.fa], ['Yellow cards', (p) => p.stats.yc],
+  const rows: [string, (p: Scored) => number][] = [
+    ['BYRX Score', (p) => p.score],
+    ['Goals', (p) => p.stats.goals],
+    ['Assists', (p) => p.stats.assists],
+    ['Shots on Target', (p) => p.stats.sot],
+    ['Total Shots', (p) => p.stats.shots],
+    ['Fouls Suffered', (p) => p.stats.fa],
+    ['Appearances', (p) => p.stats.apps],
+    ['Context Factor', (p) => p.context],
   ];
   const opts = pool.slice(0, 200);
+
   return (
     <>
       <div className="page-heading">
-        <div><div className="eyebrow">head to head</div><h1>Compare <em>players.</em></h1></div>
-        <p>Pick any two players from the top 200. The radar shows league percentile across six attributes.</p>
+        <div>
+          <div className="eyebrow">HEAD TO HEAD COMBAT MATRIX</div>
+          <h1>Compare <em>players.</em></h1>
+        </div>
+        <p>Pick any two players from the top 200. The radar & statistical delta meters illustrate comparative dominance.</p>
       </div>
-      <div className="grid-2" style={{ marginBottom: 18 }}>
-        <select className="select" value={a} onChange={(e) => setA(+e.target.value)}>{opts.map((p, i) => <option key={p.id} value={i}>{p.name} — {p.team}</option>)}</select>
-        <select className="select" value={b} onChange={(e) => setB(+e.target.value)}>{opts.map((p, i) => <option key={p.id} value={i}>{p.name} — {p.team}</option>)}</select>
+
+      {/* VS Head-to-Head Top Banner */}
+      <div className="grid grid-cols-1 md:grid-cols-11 gap-3 items-center mb-6 p-4 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-xl shadow-2xl">
+        {/* Player A Selector Card */}
+        <div className="md:col-span-5 p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
+          <Avatar p={A} cls="w-12 h-12 rounded-full border-2 border-[#00ff87] object-cover shrink-0" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-mono text-[#00ff87] font-bold uppercase tracking-wider">Player 01</span>
+              <span className="text-xs font-mono font-bold text-[#00ff87] bg-[#00ff87]/10 px-2 py-0.5 rounded-full">{A.score.toFixed(2)}★</span>
+            </div>
+            <select
+              className="w-full bg-black/80 border border-white/15 rounded-lg px-2.5 py-1 text-xs font-semibold text-white outline-none cursor-pointer"
+              value={a}
+              onChange={(e) => setA(+e.target.value)}
+            >
+              {opts.map((p, i) => <option key={p.id} value={i}>{p.name} ({p.team})</option>)}
+            </select>
+          </div>
+        </div>
+
+        {/* Central VS Badge */}
+        <div className="md:col-span-1 flex justify-center py-1">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#00ff87] to-[#38bdf8] p-0.5 shadow-[0_0_20px_rgba(0,255,135,0.4)]">
+            <div className="w-full h-full rounded-full bg-black flex items-center justify-center font-display font-black text-xs text-white tracking-widest">
+              VS
+            </div>
+          </div>
+        </div>
+
+        {/* Player B Selector Card */}
+        <div className="md:col-span-5 p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
+          <Avatar p={B} cls="w-12 h-12 rounded-full border-2 border-[#f57b7b] object-cover shrink-0" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-mono text-[#f57b7b] font-bold uppercase tracking-wider">Player 02</span>
+              <span className="text-xs font-mono font-bold text-[#f57b7b] bg-[#f57b7b]/10 px-2 py-0.5 rounded-full">{B.score.toFixed(2)}★</span>
+            </div>
+            <select
+              className="w-full bg-black/80 border border-white/15 rounded-lg px-2.5 py-1 text-xs font-semibold text-white outline-none cursor-pointer"
+              value={b}
+              onChange={(e) => setB(+e.target.value)}
+            >
+              {opts.map((p, i) => <option key={p.id} value={i}>{p.name} ({p.team})</option>)}
+            </select>
+          </div>
+        </div>
       </div>
+
       {A && B && (
         <div className="grid-2">
           <div className="panel pad">
-            <Radar players={[A, B]} colors={['#d6f77b', '#f57b7b']} />
-            <div className="legend" style={{ justifyContent: 'center' }}><span><i style={{ background: '#d6f77b' }} />{A.name}</span><span><i style={{ background: '#f57b7b' }} />{B.name}</span></div>
+            <Radar players={[A, B]} colors={['#00ff87', '#f57b7b']} />
+            <div className="legend" style={{ justifyContent: 'center' }}>
+              <span className="flex items-center gap-1.5"><i style={{ background: '#00ff87' }} />{A.name} ({A.score.toFixed(1)})</span>
+              <span className="flex items-center gap-1.5"><i style={{ background: '#f57b7b' }} />{B.name} ({B.score.toFixed(1)})</span>
+            </div>
           </div>
           <div className="panel pad">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 12, alignItems: 'center', marginBottom: 18 }}>
-              {[A, B].map((p, i) => (
-                <div key={p.id} style={{ textAlign: i ? 'right' : 'left', gridColumn: i ? 3 : 1, display: 'flex', gap: 10, alignItems: 'center', flexDirection: i ? 'row-reverse' : 'row' }}>
-                  <Avatar p={p} cls="row-avatar" /><div><b>{p.short}</b><div className="player-sub">{p.team}</div></div>
-                </div>
-              ))}
+            <div className="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold mb-3">Stat Delta Breakdown</div>
+            <div style={{ display: 'grid', gap: 14 }}>
+              {rows.map(([label, f]) => {
+                const x = f(A);
+                const y = f(B);
+                const total = Math.max(x + y, 0.001);
+                const pctA = Math.round((x / total) * 100);
+                const pctB = 100 - pctA;
+                const aWins = x > y;
+                const bWins = y > x;
+
+                return (
+                  <div key={label} className="p-2 rounded-xl bg-white/[0.02] border border-white/5">
+                    <div className="flex justify-between items-center text-xs mb-1.5 font-mono">
+                      <b className={`text-sm ${aWins ? 'text-[#00ff87] font-extrabold' : 'text-slate-300'}`}>
+                        {typeof x === 'number' && !Number.isInteger(x) ? x.toFixed(2) : x}
+                      </b>
+                      <span className="text-[11px] text-slate-400 uppercase tracking-wider font-sans font-bold">{label}</span>
+                      <b className={`text-sm ${bWins ? 'text-[#f57b7b] font-extrabold' : 'text-slate-300'}`}>
+                        {typeof y === 'number' && !Number.isInteger(y) ? y.toFixed(2) : y}
+                      </b>
+                    </div>
+                    {/* Comparative Dual-Tone Balance Bar */}
+                    <div className="h-2 w-full rounded-full bg-black/60 overflow-hidden flex">
+                      <div style={{ width: `${pctA}%` }} className="h-full bg-gradient-to-r from-emerald-600 to-[#00ff87] transition-all duration-300" />
+                      <div style={{ width: `${pctB}%` }} className="h-full bg-gradient-to-l from-rose-600 to-[#f57b7b] transition-all duration-300" />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            {rows.map(([l, f]) => {
-              const x = Number(f(A)), y = Number(f(B));
-              return (
-                <div key={l} style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr 1fr', padding: '11px 0', borderBottom: '1px solid rgba(214,247,123,.06)', fontSize: 13.5, alignItems: 'center' }}>
-                  <b className="num" style={{ color: x >= y ? '#d6f77b' : '#e8efe6' }}>{f(A)}</b>
-                  <span style={{ textAlign: 'center', color: '#8b9b8e', fontSize: 12 }}>{l}</span>
-                  <b className="num" style={{ textAlign: 'right', color: y >= x ? '#f57b7b' : '#e8efe6' }}>{f(B)}</b>
-                </div>
-              );
-            })}
           </div>
         </div>
       )}
