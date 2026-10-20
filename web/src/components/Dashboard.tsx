@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import {
-  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain, Flame, Trophy,
+  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain, Flame, Trophy, SlidersHorizontal, ArrowUpDown,
 } from 'lucide-react';
 import '@/app/dashboard.css';
 import {
@@ -383,22 +383,81 @@ function Overview({ league, onOpen, go }: { league: League; onOpen: (p: Scored) 
 
 function LeaderboardView({ league, onOpen, query }: { league: League; onOpen: (p: Scored) => void; query: string }) {
   const [pos, setPos] = useState<Pos | 'ALL'>('ALL');
+  const [sortBy, setSortBy] = useState<'score' | 'goals' | 'assists' | 'context' | 'apps'>('score');
   const [limit, setLimit] = useState(50);
+
+  const allPlayersInLeague = useMemo(() => leaguePlayers(league), [league]);
+  const posCounts = useMemo(() => ({
+    ALL: allPlayersInLeague.length,
+    FWD: allPlayersInLeague.filter((p) => p.pos === 'FWD').length,
+    MID: allPlayersInLeague.filter((p) => p.pos === 'MID').length,
+    DEF: allPlayersInLeague.filter((p) => p.pos === 'DEF').length,
+    GK: allPlayersInLeague.filter((p) => p.pos === 'GK').length,
+  }), [allPlayersInLeague]);
+
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return leaguePlayers(league, pos).filter((p) => !q || p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q));
-  }, [league, pos, query]);
+    const filtered = leaguePlayers(league, pos).filter((p) => !q || p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q));
+
+    return filtered.sort((a, b) => {
+      if (sortBy === 'goals') return b.stats.goals - a.stats.goals;
+      if (sortBy === 'assists') return b.stats.assists - a.stats.assists;
+      if (sortBy === 'context') return b.context - a.context;
+      if (sortBy === 'apps') return b.stats.apps - a.stats.apps;
+      return b.score - a.score;
+    });
+  }, [league, pos, query, sortBy]);
+
   return (
     <>
       <div className="page-heading">
-        <div><div className="eyebrow">{LEAGUE_NAME[league]} · {SEASON}</div><h1>The <em>leaderboard.</em></h1></div>
+        <div>
+          <div className="eyebrow">{LEAGUE_NAME[league]} · {SEASON}</div>
+          <h1>The <em>leaderboard.</em></h1>
+        </div>
         <p>Every player with minutes this season, scored against their own position — a keeper is never compared to a striker.</p>
       </div>
-      <div className="filter-row" style={{ marginBottom: 16 }}>
-        {(['ALL', 'FWD', 'MID', 'DEF', 'GK'] as const).map((k) => <button key={k} className={`pill ${pos === k ? 'active' : ''}`} onClick={() => { setPos(k); setLimit(50); }}>{k === 'ALL' ? 'All positions' : k}</button>)}
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4 p-2 bg-black/40 backdrop-blur-md rounded-2xl border border-white/10">
+        <div className="filter-row">
+          {(['ALL', 'FWD', 'MID', 'DEF', 'GK'] as const).map((k) => (
+            <button
+              key={k}
+              className={`pill ${pos === k ? 'active' : ''}`}
+              onClick={() => { setPos(k); setLimit(50); }}
+            >
+              <span>{k === 'ALL' ? 'All positions' : k}</span>
+              <span className="ml-1.5 opacity-60 text-[10px] font-mono">({posCounts[k]})</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 px-2 self-end md:self-auto">
+          <span className="text-xs text-slate-400 font-mono flex items-center gap-1.5 whitespace-nowrap">
+            <ArrowUpDown size={12} className="text-emerald-400" /> Sort by:
+          </span>
+          <select
+            className="bg-black/70 border border-white/15 rounded-xl px-3 py-1.5 text-xs font-mono text-slate-200 outline-none focus:border-white/40 cursor-pointer shadow-lg"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+          >
+            <option value="score">BYRX Rating (High to Low)</option>
+            <option value="goals">Goals Scored</option>
+            <option value="assists">Assists Provided</option>
+            <option value="context">Opponent Difficulty (Context)</option>
+            <option value="apps">Appearances Played</option>
+          </select>
+        </div>
       </div>
+
       <Leaderboard rows={rows.slice(0, limit)} onOpen={onOpen} />
-      {limit < rows.length && <div style={{ textAlign: 'center', marginTop: 18 }}><button className="pill active" onClick={() => setLimit(limit + 50)}>Show 50 more ({rows.length - limit} left)</button></div>}
+      {limit < rows.length && (
+        <div style={{ textAlign: 'center', marginTop: 18 }}>
+          <button className="pill active" onClick={() => setLimit(limit + 50)}>
+            Show 50 more ({rows.length - limit} left)
+          </button>
+        </div>
+      )}
     </>
   );
 }
