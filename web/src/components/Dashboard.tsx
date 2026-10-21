@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import {
-  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, Activity, Target, Sparkles, Gauge, Brain, Flame, Trophy, SlidersHorizontal, ArrowUpDown,
+  LayoutDashboard, BarChart3, Shield, GitCompare, Table2, Users, BookOpen, Search, Menu, X, ArrowUpRight, ArrowLeft, Activity, Target, Sparkles, Gauge, Brain, Flame, Trophy, SlidersHorizontal, ArrowUpDown,
 } from 'lucide-react';
 import '@/app/dashboard.css';
 import {
@@ -746,55 +746,116 @@ function LeagueTable({ league, onClub }: { league: League; onClub: (id: string) 
 
 function Clubs({ league, openClub, onOpen, selected }: { league: League; openClub: (id: string | null) => void; onOpen: (p: Scored) => void; selected: string | null }) {
   const teams = teamsFor(league);
+  const std = standingsFor(league);
   const team = TEAMS.find((t) => t.id === selected);
+
   if (team && team.league === league) {
     const squad = squadOf(team.id);
-    const st = standingsFor(league).find((s) => s.teamId === team.id);
+    const st = std.find((s) => s.teamId === team.id);
+    const squadAvg = squad.length > 0
+      ? (squad.reduce((acc, p) => acc + p.score, 0) / squad.length).toFixed(2)
+      : '0.00';
+
     return (
       <>
-        <button className="pill" onClick={() => openClub(null)} style={{ marginBottom: 18 }}>← All clubs</button>
+        <button className="pill flex items-center gap-1.5 mb-6" onClick={() => openClub(null)}>
+          <ArrowLeft size={14} />
+          <span>All clubs</span>
+        </button>
+
         <div className="page-heading">
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={team.crest} alt="" style={{ width: 84, height: 84, objectFit: 'contain' }} />
-            <div><div className="eyebrow">{LEAGUE_NAME[league]} · {squad.length} players · 2026/27 squad (ESPN)</div><h1 style={{ fontSize: 46 }}>{team.name}</h1></div>
-          </div>
-          {st && <p>{st.rank}{['st', 'nd', 'rd'][st.rank - 1] || 'th'} · {st.points} pts · W{st.wins} D{st.draws} L{st.losses} · GD {st.gd > 0 ? '+' : ''}{st.gd}</p>}
-        </div>
-        {(['GK', 'DEF', 'MID', 'FWD'] as Pos[]).map((pos) => (
-          <div key={pos} style={{ marginBottom: 26 }}>
-            <div className="eyebrow" style={{ color: POS_COL[pos], marginBottom: 12 }}>{{ GK: 'Goalkeepers', DEF: 'Defenders', MID: 'Midfielders', FWD: 'Forwards' }[pos]}</div>
-            <div className="grid-3">
-              {squad.filter((p) => p.pos === pos).map((p) => (
-                <button key={p.id} className="club-card" onClick={() => onOpen(p)} style={{ ['--c' as string]: POS_COL[pos] }}>
-                  <Avatar p={p} cls="row-avatar" />
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <b style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</b>
-                    <span className="player-sub">#{p.jersey || '–'} · {p.nationality || '—'}{p.age ? ` · ${p.age}y` : ''}</span>
-                  </div>
-                  <span className="score-cell" style={{ fontSize: 14, position: 'relative', zIndex: 1 }}>{p.stats.apps ? p.score.toFixed(1) : '–'}</span>
-                </button>
-              ))}
+            <img src={team.crest} alt="" style={{ width: 84, height: 84, objectFit: 'contain' }} className="drop-shadow-[0_4px_16px_rgba(0,0,0,0.6)]" />
+            <div>
+              <div className="eyebrow">{LEAGUE_NAME[league]} · 2026/27 ESPN ROSTER</div>
+              <h1 style={{ fontSize: 46 }}>{team.name}</h1>
             </div>
           </div>
-        ))}
+          {st && (
+            <div className="flex flex-wrap gap-2 mt-3 sm:mt-0">
+              <span className="px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 text-xs font-mono text-emerald-400 font-bold">
+                Table Rank #{st.rank}
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 text-xs font-mono text-white">
+                {st.points} Pts ({st.wins}W-{st.draws}D-{st.losses}L)
+              </span>
+              <span className="px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 text-xs font-mono text-slate-300">
+                Squad Avg: {squadAvg}★
+              </span>
+            </div>
+          )}
+        </div>
+
+        {(['GK', 'DEF', 'MID', 'FWD'] as Pos[]).map((pos) => {
+          const posPlayers = squad.filter((p) => p.pos === pos);
+          if (!posPlayers.length) return null;
+
+          return (
+            <div key={pos} style={{ marginBottom: 26 }}>
+              <div className="eyebrow flex items-center justify-between" style={{ color: POS_COL[pos], marginBottom: 12 }}>
+                <span>{{ GK: 'Goalkeepers', DEF: 'Defenders', MID: 'Midfielders', FWD: 'Forwards' }[pos]}</span>
+                <span className="text-[10px] font-mono text-slate-500">({posPlayers.length} in squad)</span>
+              </div>
+              <div className="grid-3">
+                {posPlayers.map((p) => (
+                  <button key={p.id} className="club-card" onClick={() => onOpen(p)} style={{ ['--c' as string]: POS_COL[pos] }}>
+                    <Avatar p={p} cls="row-avatar" />
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <b style={{ display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</b>
+                      <span className="player-sub">#{p.jersey || '–'} · {p.nationality || '—'}{p.age ? ` · ${p.age}y` : ''}</span>
+                    </div>
+                    <span className="score-cell" style={{ fontSize: 14, position: 'relative', zIndex: 1 }}>{p.stats.apps ? p.score.toFixed(1) : '–'}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </>
     );
   }
+
   return (
     <>
       <div className="page-heading">
-        <div><div className="eyebrow">{teams.length} clubs · {ALL_PLAYERS.filter((p) => p.league === league).length} players</div><h1>Clubs &amp; <em>squads.</em></h1></div>
+        <div>
+          <div className="eyebrow">{teams.length} clubs · {ALL_PLAYERS.filter((p) => p.league === league).length} players</div>
+          <h1>Clubs &amp; <em>squads.</em></h1>
+        </div>
         <p>Official 2026/27 squads pulled from ESPN rosters for every top-flight club. Pick one to see its full squad.</p>
       </div>
+
       <div className="grid-3">
-        {teams.map((t) => (
-          <button key={t.id} className="club-card" style={{ ['--c' as string]: t.color }} onClick={() => openClub(t.id)}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={t.crest} alt="" />
-            <div><b>{t.name}</b><div className="player-sub">{squadOf(t.id).length} players</div></div>
-          </button>
-        ))}
+        {teams.map((t) => {
+          const st = std.find((s) => s.teamId === t.id);
+          const squad = squadOf(t.id);
+          return (
+            <button
+              key={t.id}
+              className="club-card group"
+              style={{ ['--c' as string]: t.color }}
+              onClick={() => openClub(t.id)}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={t.crest} alt={t.name} className="group-hover:scale-110 transition-transform duration-300" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between mb-0.5">
+                  <b className="truncate group-hover:text-white transition-colors">{t.name}</b>
+                  {st && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/10 text-slate-300 shrink-0 ml-1">
+                      #{st.rank}
+                    </span>
+                  )}
+                </div>
+                <div className="player-sub flex items-center justify-between text-xs">
+                  <span>{squad.length} players</span>
+                  {st && <span className="font-mono text-emerald-400 font-semibold">{st.points} pts</span>}
+                </div>
+              </div>
+            </button>
+          );
+        })}
       </div>
     </>
   );
