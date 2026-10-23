@@ -31,10 +31,10 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
     setActivePlayer(featuredPlayer);
   }, [featuredPlayer]);
 
-  const accentColor = isPL ? '#e90052' : '#ea0029';
+  const accentColor = isPL ? '#38bdf8' : '#fb923c';
   const accentGlow = isPL
-    ? 'rgba(233, 0, 82, 0.35)'
-    : 'rgba(234, 0, 41, 0.35)';
+    ? 'rgba(56, 189, 248, 0.35)'
+    : 'rgba(251, 146, 60, 0.35)';
 
   const jerseyNumber = activePlayer.jersey || (isPL ? '09' : '05');
 
@@ -157,7 +157,7 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
         {/* Subtle ambient league glow behind header */}
         <div
           className="absolute -top-16 -left-16 w-56 h-56 rounded-full blur-[80px] pointer-events-none opacity-30"
-          style={{ background: isPL ? '#e90052' : '#ea0029' }}
+          style={{ background: isPL ? '#38bdf8' : '#fb923c' }}
         />
 
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 relative z-10">
@@ -168,12 +168,12 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
               className="relative flex items-center justify-center w-12 h-12 rounded-2xl p-2 shrink-0 border transition-all shadow-xl"
               style={{
                 background: isPL
-                  ? 'linear-gradient(135deg, #38003c 0%, #e90052 100%)'
-                  : 'linear-gradient(135deg, #1f0206 0%, #ea0029 100%)',
-                borderColor: isPL ? 'rgba(233, 0, 82, 0.5)' : 'rgba(234, 0, 41, 0.5)',
+                  ? 'linear-gradient(135deg, #0369a1 0%, #38bdf8 100%)'
+                  : 'linear-gradient(135deg, #c2410c 0%, #fb923c 100%)',
+                borderColor: isPL ? 'rgba(56, 189, 248, 0.5)' : 'rgba(251, 146, 60, 0.5)',
                 boxShadow: isPL
-                  ? '0 0 20px rgba(233, 0, 82, 0.6)'
-                  : '0 0 20px rgba(234, 0, 41, 0.6)',
+                  ? '0 0 20px rgba(56, 189, 248, 0.6)'
+                  : '0 0 20px rgba(251, 146, 60, 0.6)',
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -222,8 +222,8 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-2xl transition-all duration-300 shrink-0 group ${
                       isSelected
                         ? isPL
-                          ? 'bg-gradient-to-r from-[#e90052] via-[#b80041] to-[#7928ca] text-white shadow-lg shadow-[#e90052]/40 scale-[1.03] border border-white/40'
-                          : 'bg-gradient-to-r from-[#ea0029] via-[#d60025] to-[#ff5722] text-white shadow-lg shadow-[#ea0029]/40 scale-[1.03] border border-white/40'
+                          ? 'bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#38bdf8] text-slate-950 font-extrabold shadow-lg shadow-[#38bdf8]/40 scale-[1.03] border border-white/40'
+                          : 'bg-gradient-to-r from-[#ea580c] via-[#f97316] to-[#fb923c] text-slate-950 font-extrabold shadow-lg shadow-[#fb923c]/40 scale-[1.03] border border-white/40'
                         : 'bg-black/60 text-slate-300 border border-white/10 hover:border-white/30 hover:bg-white/[0.08] hover:text-white'
                     }`}
                   >
@@ -279,7 +279,7 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
           {/* Ambient inner rim glow */}
           <div
             className={`absolute -top-24 -left-24 w-64 h-64 rounded-full blur-[80px] pointer-events-none opacity-40 transition-colors ${
-              isPL ? 'bg-[#e90052]' : 'bg-[#ea0029]'
+              isPL ? 'bg-[#38bdf8]' : 'bg-[#fb923c]'
             }`}
           />
 
@@ -529,11 +529,11 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                 } else if (m.goals > 0) {
                   // Goal scored
                   barColor = isPL
-                    ? 'bg-gradient-to-t from-pink-700 via-[#e90052] to-amber-400'
-                    : 'bg-gradient-to-t from-red-700 via-[#ea0029] to-amber-400';
+                    ? 'bg-gradient-to-t from-sky-700 via-[#38bdf8] to-cyan-300'
+                    : 'bg-gradient-to-t from-orange-700 via-[#fb923c] to-amber-300';
                 } else if (m.assists > 0) {
                   // Assist provided
-                  barColor = 'bg-gradient-to-t from-indigo-700 via-violet-500 to-cyan-400';
+                  barColor = 'bg-gradient-to-t from-amber-600 via-[#fb923c] to-orange-400';
                 } else {
                   // Played without direct goal/assist
                   barColor = 'bg-gradient-to-t from-slate-700/80 via-slate-600/70 to-slate-500/60';
@@ -555,7 +555,7 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                         opacity: m.played ? 1 : 0.45,
                         boxShadow:
                           m.goals > 0 || isHovered
-                            ? '0 0 10px rgba(233, 0, 82, 0.6)'
+                            ? (isPL ? '0 0 10px rgba(56, 189, 248, 0.6)' : '0 0 10px rgba(251, 146, 60, 0.6)')
                             : 'none',
                       }}
                     />
@@ -581,26 +581,26 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
             {/* Asymmetric Pill Button with attached circular arrow icon */}
             <button
               onClick={onExploreMore}
-              className={`group flex items-center justify-between gap-3 pl-6 pr-2 py-2 rounded-full font-display font-bold text-sm text-white shadow-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] ${
+              className={`group flex items-center justify-between gap-3 pl-6 pr-2 py-2 rounded-full font-display font-bold text-sm text-slate-950 shadow-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] ${
                 isPL
-                  ? 'bg-gradient-to-r from-[#0055ff] via-[#1677ff] to-[#2563eb] shadow-blue-500/25'
-                  : 'bg-gradient-to-r from-[#ea0029] via-[#f94d1e] to-[#ff5722] shadow-red-500/25'
+                  ? 'bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#38bdf8] shadow-sky-500/25'
+                  : 'bg-gradient-to-r from-[#ea580c] via-[#f97316] to-[#fb923c] shadow-orange-500/25'
               }`}
             >
               <span>Explore more</span>
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center transition-transform group-hover:rotate-45">
-                <ArrowUpRight className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center transition-transform group-hover:rotate-45">
+                <ArrowUpRight className="w-4 h-4 text-slate-950" />
               </div>
             </button>
 
             {/* Goals & Assists Legend and Matchday Icons */}
             <div className="flex items-center gap-4 text-slate-400 text-xs font-mono">
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-500 to-[#e90052]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-sky-400 to-[#38bdf8]" />
                 <span className="text-slate-300">Goals</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-amber-400 to-[#fb923c]" />
                 <span className="text-slate-300">Assists</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -819,8 +819,8 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                   className={`px-3 py-1 rounded-full uppercase text-[10px] font-bold tracking-wider transition-all ${
                     selectedKit === kit
                       ? isPL
-                        ? 'bg-[#e90052] text-white shadow'
-                        : 'bg-[#ea0029] text-white shadow'
+                        ? 'bg-[#38bdf8] text-slate-950 font-extrabold shadow'
+                        : 'bg-[#fb923c] text-slate-950 font-extrabold shadow'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
@@ -859,7 +859,7 @@ export const ActivityShowcase: React.FC<ActivityShowcaseProps> = ({
                     selectedKit === 'home'
                       ? isPL ? '#111827' : '#ffffff'
                       : selectedKit === 'away'
-                      ? isPL ? '#e90052' : '#ea0029'
+                      ? isPL ? '#38bdf8' : '#fb923c'
                       : '#fbbf24'
                   }
                   stroke="rgba(255,255,255,0.18)"
