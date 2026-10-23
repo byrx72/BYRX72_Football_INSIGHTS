@@ -38,7 +38,7 @@ export const MatchPredictorView: React.FC<MatchPredictorViewProps> = ({ league }
     }, 400);
   };
 
-  const accentColor = isPL ? '#e90052' : '#ea0029';
+  const accentColor = isPL ? '#38bdf8' : '#fb923c';
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -148,8 +148,8 @@ export const MatchPredictorView: React.FC<MatchPredictorViewProps> = ({ league }
               className={`flex flex-col items-center gap-0.5 px-4 py-2 rounded-2xl text-xs font-mono font-bold transition-all shrink-0 ${
                 isSelected
                   ? isPL
-                    ? 'bg-[#e90052] text-white shadow-lg shadow-[#e90052]/30 scale-105'
-                    : 'bg-[#ea0029] text-white shadow-lg shadow-[#ea0029]/30 scale-105'
+                    ? 'bg-[#38bdf8] text-slate-950 font-extrabold shadow-lg shadow-[#38bdf8]/35 scale-105'
+                    : 'bg-[#fb923c] text-slate-950 font-extrabold shadow-lg shadow-[#fb923c]/35 scale-105'
                   : 'bg-black/60 text-slate-300 border border-white/10 hover:border-white/30 hover:text-white'
               }`}
             >

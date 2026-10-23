@@ -28,7 +28,7 @@ export const RichPlayerProfileModal: React.FC<RichPlayerProfileModalProps> = ({
   const isPL = league === 'PL';
   const s = player.stats;
   const jerseyNumber = player.jersey || '09';
-  const accentColor = isPL ? '#e90052' : '#ea0029';
+  const accentColor = isPL ? '#38bdf8' : '#fb923c';
   const teamObj = TEAMS.find((t) => t.id === player.teamId);
 
   // Form ratings over last 5 gameweeks
@@ -56,8 +56,8 @@ export const RichPlayerProfileModal: React.FC<RichPlayerProfileModalProps> = ({
         onClick={(e) => e.stopPropagation()}
         style={{
           boxShadow: isPL
-            ? '0 25px 80px -15px rgba(233,0,82,0.3)'
-            : '0 25px 80px -15px rgba(234,0,41,0.3)',
+            ? '0 25px 80px -15px rgba(56,189,248,0.35)'
+            : '0 25px 80px -15px rgba(251,146,60,0.35)',
         }}
       >
         {/* Floating Close Button */}

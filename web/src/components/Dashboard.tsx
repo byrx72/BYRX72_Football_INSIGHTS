@@ -948,11 +948,11 @@ export default function Dashboard() {
             className="brand-mark font-display relative overflow-hidden group shadow-lg flex items-center justify-center p-1.5"
             style={{
               background: league === 'PL'
-                ? 'linear-gradient(135deg, #38003c 0%, #e90052 100%)'
-                : 'linear-gradient(135deg, #1f0206 0%, #ea0029 100%)',
+                ? 'linear-gradient(135deg, #0284c7 0%, #38bdf8 100%)'
+                : 'linear-gradient(135deg, #ea580c 0%, #fb923c 100%)',
               boxShadow: league === 'PL'
-                ? '0 0 24px rgba(233, 0, 82, 0.6)'
-                : '0 0 24px rgba(234, 0, 41, 0.6)',
+                ? '0 0 24px rgba(56, 189, 248, 0.6)'
+                : '0 0 24px rgba(251, 146, 60, 0.6)',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -984,8 +984,8 @@ export default function Dashboard() {
             <div
               className="brand-mark font-display flex items-center justify-center p-1"
               style={{
-                background: league === 'PL' ? 'linear-gradient(135deg, #38003c, #e90052)' : 'linear-gradient(135deg, #1f0206, #ea0029)',
-                boxShadow: league === 'PL' ? '0 0 16px rgba(233,0,82,0.5)' : '0 0 16px rgba(234,0,41,0.5)',
+                background: league === 'PL' ? 'linear-gradient(135deg, #0284c7, #38bdf8)' : 'linear-gradient(135deg, #ea580c, #fb923c)',
+                boxShadow: league === 'PL' ? '0 0 16px rgba(56, 189, 248, 0.5)' : '0 0 16px rgba(251, 146, 60, 0.5)',
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1032,8 +1032,8 @@ export default function Dashboard() {
                     className={`relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-display font-extrabold transition-all duration-300 group ${
                       isActive
                         ? isThisPL
-                          ? 'bg-gradient-to-r from-[#e90052] via-[#b80041] to-[#38003c] text-white shadow-[0_0_24px_rgba(233,0,82,0.65)] border border-white/40 scale-[1.02]'
-                          : 'bg-gradient-to-r from-[#ea0029] via-[#d60025] to-[#ff5722] text-white shadow-[0_0_24px_rgba(234,0,41,0.65)] border border-white/40 scale-[1.02]'
+                          ? 'bg-gradient-to-r from-[#0284c7] via-[#0ea5e9] to-[#38bdf8] text-slate-950 shadow-[0_0_24px_rgba(56,189,248,0.65)] border border-white/40 scale-[1.02]'
+                          : 'bg-gradient-to-r from-[#ea580c] via-[#f97316] to-[#fb923c] text-slate-950 shadow-[0_0_24px_rgba(251,146,60,0.65)] border border-white/40 scale-[1.02]'
                         : 'text-slate-400 hover:text-white hover:bg-white/[0.08] border border-transparent'
                     }`}
                   >
