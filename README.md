@@ -1,12 +1,16 @@
 # ⚽ BYRX72 Football Insights: Moneyball Scoring Engine & Leaderboards
 > **An objective, position-weighted algorithmic leaderboard & tactical analytics platform for the Premier League and La Liga.**
 
-![Next.js](https://img.shields.io/badge/Next.js%2015-black?style=for-the-badge&logo=next.js&logoColor=white)
+[![Live Web App](https://img.shields.io/badge/Live%20App-byrx--72--football--insights.vercel.app-38bdf8?style=for-the-badge&logo=vercel&logoColor=white)](https://byrx-72-football-insights.vercel.app)
+![Next.js](https://img.shields.io/badge/Next.js%2016-black?style=for-the-badge&logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React%2019-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Theme-Light_Blue_%26_Light_Orange-fb923c?style=for-the-badge)
 ![Python](https://img.shields.io/badge/Python%203.11-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Recharts](https://img.shields.io/badge/Data_Viz-Recharts-blue?style=for-the-badge)
+![Recharts](https://img.shields.io/badge/Data_Viz-Recharts-38bdf8?style=for-the-badge)
+
+🌐 **Live Demo:** [https://byrx-72-football-insights.vercel.app](https://byrx-72-football-insights.vercel.app)  
+🚀 **Alternate Production Alias:** [https://byrx-72-football-insights-kq9a.vercel.app](https://byrx-72-football-insights-kq9a.vercel.app)
 
 ---
 
@@ -131,6 +135,11 @@ When training your upcoming model in Scikit-Learn, XGBoost, or PyTorch:
 ---
 
 ## 🚀 Deployment Guide
+
+### Live Deployments
+The application is continuously deployed via Vercel with automatic Git integration:
+- **Production URL**: [https://byrx-72-football-insights.vercel.app](https://byrx-72-football-insights.vercel.app)
+- **Deployment Alias**: [https://byrx-72-football-insights-kq9a.vercel.app](https://byrx-72-football-insights-kq9a.vercel.app)
 
 ### Deploying to Vercel (Recommended — 1 Click)
 
