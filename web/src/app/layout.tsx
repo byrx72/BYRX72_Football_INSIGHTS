@@ -32,8 +32,48 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://byrx-72-football-insights.vercel.app'),
   title: "BYRX72 Football Insights | 2026/27 European Leaderboard & Analytics",
   description: "Next-gen European Football Analytics & Cinematic Player Leaderboard. Position-Adjusted, Live 2026/27 ESPN Stats, Premier League & La Liga EA Sports.",
+  keywords: [
+    "Football Analytics",
+    "Premier League Leaderboard",
+    "La Liga Stats",
+    "Moneyball Football Engine",
+    "Match Predictor",
+    "Expected Goals",
+    "European Football 2026",
+    "Player Ratings",
+  ],
+  authors: [{ name: "byrx72" }],
+  creator: "byrx72",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://byrx-72-football-insights.vercel.app",
+    title: "BYRX72 Football Insights | 2026/27 European Leaderboard & Analytics",
+    description: "Next-gen European Football Analytics & Cinematic Player Leaderboard. Position-Adjusted, Live 2026/27 ESPN Stats, Premier League & La Liga EA Sports.",
+    siteName: "BYRX72 Football Insights",
+    images: [
+      {
+        url: "/pl-espn.png",
+        width: 1200,
+        height: 630,
+        alt: "BYRX72 Football Insights Preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BYRX72 Football Insights | 2026/27 European Leaderboard & Analytics",
+    description: "Next-gen European Football Analytics & Cinematic Player Leaderboard. Position-Adjusted, Live 2026/27 ESPN Stats, Premier League & La Liga EA Sports.",
+    creator: "@byrx72",
+    images: ["/pl-espn.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
